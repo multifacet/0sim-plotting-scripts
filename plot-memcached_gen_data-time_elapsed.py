@@ -52,7 +52,7 @@ for label, ys in data.items():
     h_plot, = plt.plot(xs, np.cumsum(ys), label = label, linestyle = 'None', marker = markers.next())
     handles.append(h_plot)
 
-plt.title('Latency of Operations as Memory Usage Increases')
+#plt.title('Latency of Operations as Memory Usage Increases')
 
 plt.legend(handles=handles)
 
@@ -62,6 +62,8 @@ plt.gca().set_ylim(bottom=1)
 plt.xlabel('Memory used (GB)')
 
 plt.ylabel('Total Elapsed Time (%s)' % UNIT)
+
+plt.grid(True)
 
 plt.savefig("/tmp/figure.pdf", bbox_inches="tight")
 plt.show()

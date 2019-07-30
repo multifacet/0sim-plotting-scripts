@@ -95,6 +95,8 @@ ax1.set_xlabel("Time (s)")
 ax1.set_xlim((0, max(x)))
 ax1.set_ylabel("Free Phys\nMem (GB)")
 
+plt.grid(True)
+
 # save and show
 plt.savefig("/tmp/figure.pdf", bbox_inches="tight")
 plt.show()
