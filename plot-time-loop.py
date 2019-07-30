@@ -33,7 +33,7 @@ for arg in argv[1:]:
             if line[0] == '=':
                 mark.append(len(data[label]))
 
-fig, ax = plt.subplots()
+plt.figure(1, figsize=(5, 3.5))
 
 markers = itertools.cycle(MARKERS)
 
@@ -42,18 +42,19 @@ handles = []
 for i, (label, ys) in enumerate(data.items()):
     ys = np.diff(ys)
     xs = np.arange(len(ys))
-    h_plot, = ax.plot(xs, ys, label = label, linestyle = 'None', marker = markers.next(), color = np.random.rand(3,))
+    h_plot, = plt.plot(xs, ys, label = label, linestyle = 'None', marker = markers.next(), color = np.random.rand(3,))
 
     handles.append(h_plot)
 
 for m in mark:
     plt.axvline(x=m, color = 'red')
 
-#ax.set_ylim((0,100000))
+plt.yscale('log')
 
-plt.title('Latency of Operations as Memory Usage Increases')
+plt.ylabel("Time Elapsed (cycles)")
+plt.xlabel("Operation Number")
 
 plt.legend(handles=handles)
 
-#fig.tight_layout()  # otherwise the right y-label is slightly clipped
+plt.savefig("/tmp/figure.pdf", bbox_inches="tight")
 plt.show()
