@@ -37,7 +37,7 @@ for arg in argv[1:]:
         prev = first
         for line in f.readlines():
             v = int(line.strip())
-            if j % 10 == 0:
+            if j % 100 == 0 and j > 0: # discard the first
                 data[label].append(rdtsc_to_msec(v - prev, freq))
                 #data[label].append(v - prev)
             j += 1
