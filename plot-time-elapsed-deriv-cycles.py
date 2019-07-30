@@ -18,8 +18,13 @@ mark = []
 for arg in argv[1:]:
     label = arg
     filename = arg
+    snd_filename = None
     if ":" in arg:
-        label, filename = arg.split(":")
+        spl = arg.split(":")
+        if len(spl) == 2:
+            label, filename = spl
+        else:
+            label, filename, snd_filename = spl
     data[label] = []
 
     with open(filename, 'r') as f:
@@ -32,6 +37,21 @@ for arg in argv[1:]:
 
             if line[0] == '=':
                 mark.append(len(data[label]))
+
+
+    if snd_filename is not None:
+        mark.append(len(data[label]))
+
+        with open(snd_filename, 'r') as f:
+            for line in f.readlines():
+                try:
+                    val = float(line.strip().replace(',', ''))
+                    data[label].append(val)
+                except ValueError:
+                    print("bad float: %s" % line)
+
+                if line[0] == '=':
+                    mark.append(len(data[label]))
 
 plt.figure(1, figsize=(5, 3.5))
 
