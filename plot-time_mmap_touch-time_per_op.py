@@ -9,20 +9,22 @@ from collections import OrderedDict
 
 from sys import argv, exit
 
-FREQ = 3500000.0 # khz
+#FREQ = 3500000.0 # khz
 
 MARKERS = ['.', '>', '<', '*', 'v', '^', 'D', 'X', 'P', 'p', 's']
 
-print("Assuming frequency is %d KHz" % FREQ)
+#print("Assuming frequency is %d KHz" % FREQ)
 
 data = OrderedDict()
 
-def rdtsc_to_msec(ticks):
-    return ticks / float(FREQ)
+def rdtsc_to_msec(ticks, freq):
+    return ticks / float(freq)
 
 for arg in argv[1:]:
-    label, filename = arg.split(":")
+    label, filename, freq = arg.split(":")
     data[label] = []
+
+    freq = int(freq) # KHz
 
     with open(filename, 'r') as f:
         first = int(f.readline()[8:].strip())
@@ -36,7 +38,8 @@ for arg in argv[1:]:
         for line in f.readlines():
             v = int(line.strip())
             if j % 10 == 0:
-                data[label].append(rdtsc_to_msec(v - prev))
+                data[label].append(rdtsc_to_msec(v - prev, freq))
+                #data[label].append(v - prev)
             j += 1
             prev = v
 
@@ -63,6 +66,7 @@ plt.gca().set_ylim(bottom=0)
 plt.xlabel('Memory Used (GB)')
 
 plt.ylabel("Total Time Elapsed (msec)")
+#plt.ylabel("Total Time Elapsed (cycles)")
 
 plt.grid(True)
 
