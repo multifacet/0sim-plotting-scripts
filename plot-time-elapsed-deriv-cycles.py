@@ -76,5 +76,5 @@ plt.xlabel("Operation Number")
 
 plt.legend(handles=handles)
 
-plt.savefig("/tmp/figure.pdf", bbox_inches="tight")
+plt.savefig("/tmp/figure.png", bbox_inches="tight")
 plt.show()
