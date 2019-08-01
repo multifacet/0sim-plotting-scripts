@@ -9,7 +9,7 @@ from collections import OrderedDict
 
 from sys import argv, exit
 
-from papercolors import MARKERS, COLORS
+from paperstyle import MARKERS, COLORS, IS_PDF
 
 REGEX = r'^DONE [0-9]+ Duration { secs: ([0-9]+), nanos: ([0-9]+) }( [0-9]+)?$'
 
@@ -66,6 +66,5 @@ plt.ylabel('Latency of Operations (%s)' % UNIT)
 
 plt.grid(True)
 
-#plt.savefig("/tmp/figure.pdf", bbox_inches="tight")
-plt.savefig("/tmp/figure.png", bbox_inches="tight")
+plt.savefig("/tmp/figure.%s" % ("pdf" if IS_PDF else "png"), bbox_inches="tight")
 plt.show()

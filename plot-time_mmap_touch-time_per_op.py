@@ -9,7 +9,7 @@ from collections import OrderedDict
 
 from sys import argv, exit
 
-from papercolors import COLORS, MARKERS
+from paperstyle import MARKERS, COLORS, IS_PDF
 
 data = OrderedDict()
 
@@ -65,5 +65,5 @@ plt.ylabel("Total Time Elapsed (msec)")
 
 plt.grid(True)
 
-plt.savefig("/tmp/figure.png", bbox_inches="tight")
+plt.savefig("/tmp/figure.%s" % ("pdf" if IS_PDF else "png"), bbox_inches="tight")
 plt.show()
