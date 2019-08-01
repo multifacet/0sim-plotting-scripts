@@ -9,11 +9,11 @@ from collections import OrderedDict
 
 from sys import argv, exit
 
-MARKERS = ['.', '>', '<', '*', 'v', '^', 'D', 'X', 'P', 'p', 's']
+from papercolors import MARKERS, COLORS
 
 data = OrderedDict()
 
-mark = []
+mark = set([])
 
 for arg in argv[1:]:
     label = arg
@@ -36,11 +36,11 @@ for arg in argv[1:]:
                 print("bad float: %s" % line)
 
             if line[0] == '=':
-                mark.append(len(data[label]))
+                mark.add(len(data[label]))
 
 
     if snd_filename is not None:
-        mark.append(len(data[label]))
+        mark.add(len(data[label]))
 
         with open(snd_filename, 'r') as f:
             for line in f.readlines():
@@ -51,23 +51,27 @@ for arg in argv[1:]:
                     print("bad float: %s" % line)
 
                 if line[0] == '=':
-                    mark.append(len(data[label]))
+                    mark.add(len(data[label]))
 
 plt.figure(1, figsize=(5, 3.5))
 
 markers = itertools.cycle(MARKERS)
+colors = itertools.cycle(COLORS)
 
 handles = []
 
 for i, (label, ys) in enumerate(data.items()):
     ys = np.diff(ys)
     xs = np.arange(len(ys))
-    h_plot, = plt.plot(xs, ys, label = label, linestyle = 'None', marker = markers.next(), color = np.random.rand(3,))
+    h_plot, = plt.plot(xs, ys, label = label, linestyle = 'None', marker = markers.next(), color = colors.next())
 
     handles.append(h_plot)
 
 for m in mark:
     plt.axvline(x=m, color = 'red')
+
+plt.gca().set_xlim(left=0)
+plt.gca().set_ylim(bottom=1)
 
 plt.yscale('log')
 
