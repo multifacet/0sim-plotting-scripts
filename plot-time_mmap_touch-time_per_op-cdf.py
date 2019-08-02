@@ -13,8 +13,8 @@ from paperstyle import COLORS, IS_PDF
 
 data = OrderedDict()
 
-def rdtsc_to_msec(ticks, freq):
-    return ticks / float(freq)
+def rdtsc_to_usec(ticks, freq):
+    return ticks / float(freq) * 1000.0
 
 for arg in argv[1:]:
     label, filename, freq = arg.split(":")
@@ -34,7 +34,7 @@ for arg in argv[1:]:
         for line in f.readlines():
             v = int(line.strip())
             if j % 100 == 0 and j > 0: # discard the first
-                data[label].append(rdtsc_to_msec(v - prev, freq))
+                data[label].append(rdtsc_to_usec(v - prev, freq))
             j += 1
             prev = v
 
