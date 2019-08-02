@@ -54,7 +54,7 @@ plt.legend(handles=handles, loc='lower right')
 
 plt.ylim((0, 100))
 
-plt.gca().set_xlim(left=0)
+plt.xscale('log')
 
 plt.xlabel('$\Delta$ Time (usec)')
 
