@@ -45,8 +45,7 @@ colors = itertools.cycle(COLORS)
 handles = []
 
 for label, xs in data.items():
-    xs = np.sort(xs)
-    cdfx = np.cumsum(xs)
+    cdfx = np.sort(xs)
     cdfy = np.linspace(0.0, 100.0, len(xs))
     h_plot, = plt.plot(cdfx, cdfy, label = label, linestyle = '-', marker = 'None', color = colors.next())
     handles.append(h_plot)
