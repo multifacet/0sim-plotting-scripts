@@ -61,7 +61,7 @@ plt.gca().set_ylim(bottom=0)
 
 plt.xlabel('Memory Used (GB)')
 
-plt.ylabel("Total Time Elapsed (msec)")
+plt.ylabel("$\Delta$ Time (msec)")
 
 plt.grid(True)
 

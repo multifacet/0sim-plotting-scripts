@@ -75,7 +75,7 @@ plt.gca().set_ylim(bottom=1)
 
 plt.yscale('log')
 
-plt.ylabel("Time Elapsed (cycles)")
+plt.ylabel("$\Delta$ Time (cycles)")
 plt.xlabel("Operation Number")
 
 plt.legend(handles=handles)

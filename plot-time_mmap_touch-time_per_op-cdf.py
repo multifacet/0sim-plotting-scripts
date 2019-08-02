@@ -57,7 +57,7 @@ plt.ylim((0, 100))
 
 plt.gca().set_xlim(left=0)
 
-plt.xlabel('Total Time Elapsed (msec)')
+plt.xlabel('$\Delta$ Time (usec)')
 
 plt.ylabel("% of Operations")
 
