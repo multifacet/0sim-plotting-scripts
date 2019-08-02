@@ -51,7 +51,7 @@ for label, xs in data.items():
     h_plot, = plt.plot(cdfx, cdfy, label = label, linestyle = '-', marker = 'None', color = colors.next())
     handles.append(h_plot)
 
-plt.legend(handles=handles)
+plt.legend(handles=handles, loc='lower right')
 
 plt.ylim((0, 100))
 
