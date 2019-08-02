@@ -18,8 +18,11 @@ from paperstyle import MARKERS, COLORS, IS_PDF
 
 data = OrderedDict()
 data1 = OrderedDict()
+has_data1 = False
 
-for arg in argv[1:]:
+YSCALE = argv[1]
+
+for arg in argv[2:]:
     label = arg
     filename = arg
     snd_filename = None
@@ -41,6 +44,7 @@ for arg in argv[1:]:
                 print("bad float: %s" % line)
 
     if snd_filename is not None:
+        has_data1 = True
         with open(snd_filename, 'r') as f:
             for line in f.readlines():
                 try:
@@ -122,7 +126,9 @@ for i, (label, xs) in enumerate(data.items()):
     cdfx = np.sort(xs)
     cdfy = np.linspace(0.0, 100.0, len(xs))
 
-    h_plot, = plt.plot(cdfx, cdfy, label = "%s-local" % label, linestyle = '-', marker = 'None', color = colors.next())
+    legend_label = "%s-local" % label if has_data1 else label
+
+    h_plot, = plt.plot(cdfx, cdfy, label = legend_label, linestyle = '-', marker = 'None', color = colors.next())
 
     handles.append(h_plot)
 
@@ -138,14 +144,16 @@ for i, (label, xs) in enumerate(data1.items()):
     cdfx = np.sort(xs)
     cdfy = np.linspace(0.0, 100.0, len(xs))
 
+    legend_label = "%s-nonlocal" % label if has_data1 else label
+
     if len(xs) > 0:
-        h_plot, = plt.plot(cdfx, cdfy, label = "%s-nonlocal" % label, linestyle = '--', marker = 'None', color = colors.next())
+        h_plot, = plt.plot(cdfx, cdfy, label = legend_label, linestyle = '--', marker = 'None', color = colors.next())
         handles.append(h_plot)
 
-plt.ylim((0, 99.999))
+plt.ylim((0, 99.999) if YSCALE == "close_to_one" else (0, 100))
 
 plt.xscale('log')
-plt.yscale('close_to_one')
+plt.yscale(YSCALE)
 
 plt.ylabel("% of Measurements")
 plt.xlabel("$\Delta$ Time (cycles)")
