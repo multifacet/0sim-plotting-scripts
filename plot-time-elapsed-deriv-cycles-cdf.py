@@ -84,7 +84,7 @@ plt.ylim((0, 100))
 
 plt.xscale('log')
 
-plt.ylabel("% of measurements")
+plt.ylabel("% of Measurements")
 plt.xlabel("Time Elapsed (cycles)")
 
 plt.legend(handles=handles)
