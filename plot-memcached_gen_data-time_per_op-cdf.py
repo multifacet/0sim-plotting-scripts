@@ -46,7 +46,7 @@ handles = []
 for label, xs in data.items():
     cdfx = np.sort(xs)
     cdfy = np.linspace(0.0, 100.0, len(xs))
-    h_plot, = plt.plot(cdfx, cdfy, label = label, linestyle = 'None', marker = markers.next(), color = colors.next())
+    h_plot, = plt.plot(cdfx, cdfy, label = label, linestyle = '-', marker = 'None', color = colors.next())
     handles.append(h_plot)
 
 plt.legend(handles=handles, loc='lower right')

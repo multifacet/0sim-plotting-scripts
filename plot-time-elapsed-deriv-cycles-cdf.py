@@ -60,7 +60,7 @@ for i, (label, xs) in enumerate(data.items()):
     cdfx = np.sort(xs)
     cdfy = np.linspace(0.0, 100.0, len(xs))
 
-    h_plot, = plt.plot(cdfx, cdfy, label = label, linestyle = '-', marker = 'None', color = colors.next())
+    h_plot, = plt.plot(cdfx, cdfy, label = "%s-local" % label, linestyle = '-', marker = 'None', color = colors.next())
 
     handles.append(h_plot)
 
@@ -77,7 +77,7 @@ for i, (label, xs) in enumerate(data1.items()):
     cdfy = np.linspace(0.0, 100.0, len(xs))
 
     if len(xs) > 0:
-        h_plot, = plt.plot(cdfx, cdfy, label = label, linestyle = '--', marker = 'None', color = colors.next())
+        h_plot, = plt.plot(cdfx, cdfy, label = "%s-nonlocal" % label, linestyle = '--', marker = 'None', color = colors.next())
         handles.append(h_plot)
 
 plt.ylim((0, 100))
