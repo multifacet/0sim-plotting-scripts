@@ -9,6 +9,8 @@ import re
 
 from sys import argv, exit
 
+from paperstyle import IS_PDF
+
 FILE = argv[1]
 
 INTERVAL = 30
@@ -98,5 +100,5 @@ ax1.set_ylabel("Free Phys\nMem (GB)")
 plt.grid(True)
 
 # save and show
-plt.savefig("/tmp/figure.pdf", bbox_inches="tight")
+plt.savefig("/tmp/figure.%s" % ("pdf" if IS_PDF else "png"), bbox_inches="tight")
 plt.show()
