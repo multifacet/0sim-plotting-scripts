@@ -91,7 +91,7 @@ ax0.stackplot(x, *ndata_transpose, labels=labels, colors=colors)
 ax0.set_ylabel("% of Free Pages")
 ax0.set_ylim((0, 100))
 
-ax0.get_xaxis().set_ticklabels([])
+plt.setp(ax0.get_xticklabels(), visible=False)
 
 ax0.grid(True)
 
