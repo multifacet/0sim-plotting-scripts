@@ -2,6 +2,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib as mpl
 import matplotlib.cm as cm
 from matplotlib.font_manager import FontProperties
 
@@ -75,21 +76,35 @@ ndata_transpose = [*zip(*ndata)]
 
 labels = ["Order %d" % i for i in range(len(data[0]))]
 
-colors = cm.rainbow(np.linspace(0, 1, len(labels)))
+colors = cm.rainbow(np.linspace(1, 0, len(labels)))
+
+plt.figure(1, figsize=(5, 3.5))
+gs = mpl.gridspec.GridSpec(2, 2, height_ratios = [6, 1], width_ratios = [20, 1])
 
 # main plot
-fig, (ax0, ax1) = plt.subplots(2, 1, sharex=True, gridspec_kw={'height_ratios': [6, 1]})
+
+ax0 = plt.subplot(gs[0, 0])
 
 ax0.stackplot(x, *ndata_transpose, labels=labels, colors=colors)
 
 ax0.set_ylabel("% of Free Pages")
 ax0.set_ylim((0, 100))
 
-ax0.legend(loc='lower left', fontsize='small', bbox_to_anchor=(0,1.02,1,0.2),
-        mode='expand', ncol=6, borderaxespad=0)
 ax0.grid(True)
 
+# Color bar
+
+cbax = plt.subplot(gs[0, 1])
+
+bounds = np.arange(0, len(labels), 1)
+cmap = mpl.colors.ListedColormap(cm.rainbow(np.linspace(1, 0, len(labels))))
+norm = mpl.colors.Normalize(vmin=0, vmax=len(labels))
+cb = mpl.colorbar.ColorbarBase(cbax, cmap=cmap, norm=norm, ticks=np.arange(0, len(labels), 4), spacing='proportional', orientation='vertical')
+cb.set_label('Free List Order')
+
 # little plot with # pages
+
+ax1 = plt.subplot(gs[1, 0], sharex = ax0)
 
 ax1.plot(x, tdata, color="k")
 
