@@ -16,6 +16,7 @@ from sys import argv, exit
 
 from paperstyle import MARKERS, COLORS, IS_PDF
 
+freq = OrderedDict()
 data = OrderedDict()
 data1 = OrderedDict()
 has_data1 = False
@@ -23,17 +24,14 @@ has_data1 = False
 YSCALE = argv[1]
 
 for arg in argv[2:]:
-    label = arg
-    filename = arg
-    snd_filename = None
-    if ":" in arg:
-        spl = arg.split(":")
-        if len(spl) == 2:
-            label, filename = spl
-        else:
-            label, filename, snd_filename = spl
+    label, filename, snd_filename, freq_khz = arg.split(":")
+
+    if snd_filename == '':
+        snd_filename = None
+
     data[label] = []
     data1[label] = []
+    freq[label] = freq_khz
 
     with open(filename, 'r') as f:
         for line in f.readlines():
@@ -108,6 +106,21 @@ class CloseToOne(mscale.ScaleBase):
         def inverted(self):
             return CloseToOne.Transform(self.nines)
 
+# Choose units (milliseconds or microseconds) heuristically
+
+def get_maxish():
+    dat = next(iter(data))
+    dat = sorted(data[dat])
+    if len(dat) < 100:
+        return max(dat)
+    else:
+        l = len(dat) / 10
+        return dat[-l]
+
+millis = get_maxish() / 1E3 > 9999
+units = "msec" if millis else "usec"
+units_f = (lambda x, khz: x / float(khz)) if millis else (lambda x, khz: x * 1000.0 / float(khz))
+
 mscale.register_scale(CloseToOne)
 
 plt.figure(1, figsize=(5, 3.5))
@@ -122,6 +135,7 @@ for i, (label, xs) in enumerate(data.items()):
     xs = filter(lambda x: x > 0, xs) # TODO
     after = len(xs)
     print(label, before - after)
+    xs = map(lambda x: units_f(x, freq[label]), xs)
     cdfx = np.sort(xs)
     cdfy = np.linspace(0.0, 100.0, len(xs))
 
@@ -139,6 +153,7 @@ for i, (label, xs) in enumerate(data1.items()):
     xs = filter(lambda x: x > 0, xs) # TODO
     after = len(xs)
     print(label, before - after)
+    xs = map(lambda x: units_f(x, freq[label]), xs)
     cdfx = np.sort(xs)
     cdfy = np.linspace(0.0, 100.0, len(xs))
 
@@ -154,7 +169,7 @@ plt.xscale('log')
 plt.yscale(YSCALE)
 
 plt.ylabel("% of Measurements")
-plt.xlabel("$\Delta$ Time (cycles)")
+plt.xlabel("$\Delta$ Time (%s)" % units)
 
 plt.legend(handles=handles, loc='lower right')
 
