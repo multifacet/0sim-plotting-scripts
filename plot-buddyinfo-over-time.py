@@ -50,6 +50,7 @@ with open(FILE, 'r') as f:
         data.append(total_vals)
 
 x = np.arange(len(data)) * INTERVAL
+x = x / 3600
 
 # normalize all values to get percentages
 def normalize(sample):
@@ -79,7 +80,7 @@ labels = ["Order %d" % i for i in range(len(data[0]))]
 colors = cm.rainbow(np.linspace(1, 0, len(labels)))
 
 plt.figure(1, figsize=(5, 3.5))
-gs = mpl.gridspec.GridSpec(2, 2, height_ratios = [6, 1], width_ratios = [20, 1])
+gs = mpl.gridspec.GridSpec(2, 2, height_ratios = [6, 1], width_ratios = [20, 1], wspace = 0.05, hspace = 0.07)
 
 # main plot
 
@@ -90,6 +91,8 @@ ax0.stackplot(x, *ndata_transpose, labels=labels, colors=colors)
 ax0.set_ylabel("% of Free Pages")
 ax0.set_ylim((0, 100))
 
+ax0.get_xaxis().set_visible(False)
+
 ax0.grid(True)
 
 # Color bar
@@ -97,9 +100,10 @@ ax0.grid(True)
 cbax = plt.subplot(gs[0, 1])
 
 bounds = np.arange(0, len(labels), 1)
+ticks = list(range(0, len(labels), 4)) + [len(labels)-1]
 cmap = mpl.colors.ListedColormap(cm.rainbow(np.linspace(1, 0, len(labels))))
-norm = mpl.colors.Normalize(vmin=0, vmax=len(labels))
-cb = mpl.colorbar.ColorbarBase(cbax, cmap=cmap, norm=norm, ticks=np.arange(0, len(labels), 4), spacing='proportional', orientation='vertical')
+norm = mpl.colors.Normalize(vmin=-0.5, vmax=len(labels)-0.5)
+cb = mpl.colorbar.ColorbarBase(cbax, cmap=cmap, norm=norm, ticks=ticks, spacing='proportional', orientation='vertical')
 cb.set_label('Free List Order')
 
 # little plot with # pages
@@ -108,7 +112,7 @@ ax1 = plt.subplot(gs[1, 0], sharex = ax0)
 
 ax1.plot(x, tdata, color="k")
 
-ax1.set_xlabel("Time (s)")
+ax1.set_xlabel("Time (hours)")
 ax1.set_xlim((0, max(x)))
 ax1.set_ylabel("Free Phys\nMem (GB)")
 
