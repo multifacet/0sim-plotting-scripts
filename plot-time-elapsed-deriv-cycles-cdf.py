@@ -142,7 +142,9 @@ for i, (label, xs) in enumerate(data.items()):
 
     legend_label = "%s-local" % label if has_data1 else label
 
-    h_plot, = plt.plot(cdfx, cdfy, label = legend_label, linestyle = '-', marker = 'None', color = colors.next())
+    mark_freq = len(xs) / 4
+
+    h_plot, = plt.plot(cdfx, cdfy, label = legend_label, linestyle = '-', marker = markers.next(), markevery=mark_freq, color = colors.next())
 
     handles.append(h_plot)
 
@@ -161,8 +163,10 @@ for i, (label, xs) in enumerate(data1.items()):
 
     legend_label = "%s-nonlocal" % label if has_data1 else label
 
+    mark_freq = len(xs) / 4
+
     if len(xs) > 0:
-        h_plot, = plt.plot(cdfx, cdfy, label = legend_label, linestyle = '--', marker = 'None', color = colors.next())
+        h_plot, = plt.plot(cdfx, cdfy, label = legend_label, linestyle = '--', marker = markers.next(), markevery=mark_freq, color = colors.next())
         handles.append(h_plot)
 
 plt.ylim((0, 99.999) if YSCALE == "close_to_one" else (0, 100))
