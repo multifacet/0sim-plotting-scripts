@@ -110,6 +110,15 @@ mscale.register_scale(CloseToOne)
 
 # Choose units (milliseconds or microseconds) heuristically
 
+def get_minish():
+    dat = next(iter(data))
+    dat = sorted(np.diff(data[dat]))
+    if len(dat) < 100:
+        return min(dat)
+    else:
+        l = len(dat) / 10
+        return dat[l]
+
 def get_maxish():
     dat = next(iter(data))
     dat = sorted(np.diff(data[dat]))
@@ -142,7 +151,8 @@ for i, (label, xs) in enumerate(data.items()):
 
     legend_label = "%s-local" % label if has_data1 else label
 
-    mark_freq = len(xs) / 4
+    mark_freq = [len(xs) / 10,
+            (-len(xs) / 20000) if YSCALE == 'close_to_one' else (-len(xs) / 10)]
 
     h_plot, = plt.plot(cdfx, cdfy, label = legend_label, linestyle = '-', marker = markers.next(), markevery=mark_freq, color = colors.next())
 
@@ -163,7 +173,8 @@ for i, (label, xs) in enumerate(data1.items()):
 
     legend_label = "%s-nonlocal" % label if has_data1 else label
 
-    mark_freq = len(xs) / 4
+    mark_freq = [len(xs) / 10,
+            (-len(xs) / 50000) if YSCALE == 'close_to_one' else (-len(xs) / 10)]
 
     if len(xs) > 0:
         h_plot, = plt.plot(cdfx, cdfy, label = legend_label, linestyle = '--', marker = markers.next(), markevery=mark_freq, color = colors.next())
