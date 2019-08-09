@@ -9,7 +9,7 @@ from collections import OrderedDict
 
 from sys import argv, exit
 
-from paperstyle import MARKERS, COLORS, IS_PDF
+from paperstyle import MARKERS, COLORS, IS_PDF, FIGSIZE
 
 data = OrderedDict()
 
@@ -53,7 +53,7 @@ for arg in argv[1:]:
                 if line[0] == '=':
                     mark.add(len(data[label]))
 
-plt.figure(1, figsize=(5, 3.5))
+plt.figure(1, figsize=FIGSIZE)
 
 markers = itertools.cycle(MARKERS)
 colors = itertools.cycle(COLORS)

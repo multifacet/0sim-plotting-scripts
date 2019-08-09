@@ -9,7 +9,7 @@ from collections import OrderedDict
 
 from sys import argv, exit
 
-from paperstyle import MARKERS, COLORS, IS_PDF
+from paperstyle import MARKERS, COLORS, IS_PDF, FIGSIZE
 
 REGEX = r'^DONE [0-9]+ Duration { secs: ([0-9]+), nanos: ([0-9]+) }( [0-9]+)?$'
 
@@ -37,7 +37,7 @@ for arg in argv[1:]:
 
             data[label].append(time / SCALE)
 
-plt.figure(1, figsize=(5, 3.5))
+plt.figure(1, figsize=FIGSIZE)
 
 markers = itertools.cycle(MARKERS)
 colors = itertools.cycle(COLORS)

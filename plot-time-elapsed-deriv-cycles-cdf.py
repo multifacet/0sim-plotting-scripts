@@ -14,7 +14,7 @@ from collections import OrderedDict
 
 from sys import argv, exit
 
-from paperstyle import MARKERS, COLORS, IS_PDF
+from paperstyle import MARKERS, COLORS, IS_PDF, FIGSIZE
 
 freq = OrderedDict()
 data = OrderedDict()
@@ -132,7 +132,7 @@ millis = get_maxish() / 1E3 > 9999
 units = "msec" if millis else "usec"
 units_f = (lambda x, khz: x / float(khz)) if millis else (lambda x, khz: x * 1000.0 / float(khz))
 
-plt.figure(1, figsize=(5, 3.5))
+plt.figure(1, figsize=FIGSIZE)
 
 markers = itertools.cycle(MARKERS)
 colors = itertools.cycle(COLORS)

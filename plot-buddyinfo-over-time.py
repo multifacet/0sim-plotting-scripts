@@ -10,7 +10,7 @@ import re
 
 from sys import argv, exit
 
-from paperstyle import IS_PDF
+from paperstyle import IS_PDF, FIGSIZE
 
 FILE = argv[1]
 
@@ -83,7 +83,7 @@ labels = ["Order %d" % i for i in range(len(data[0]))]
 
 colors = cm.rainbow(np.linspace(1, 0, len(labels)))
 
-plt.figure(1, figsize=(5, 3.5))
+plt.figure(1, figsize=FIGSIZE)
 gs = mpl.gridspec.GridSpec(2, 2, height_ratios = [6, 1], width_ratios = [20, 1], wspace = 0.05, hspace = 0.07)
 
 # main plot

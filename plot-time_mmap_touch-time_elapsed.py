@@ -9,7 +9,7 @@ from collections import OrderedDict
 
 from sys import argv, exit
 
-MARKERS = ['.', '>', '<', '*', 'v', '^', 'D', 'X', 'P', 'p', 's']
+from paperstyle import MARKERS, FIGSIZE
 
 data = OrderedDict()
 
@@ -33,7 +33,7 @@ for arg in argv[1:]:
                 data[label].append(rdtsc_to_min(int(line.strip()) - first))
             j += 1
 
-plt.figure(1, figsize=(5, 3.5))
+plt.figure(1, figsize=FIGSIZE)
 
 markers = itertools.cycle(MARKERS)
 

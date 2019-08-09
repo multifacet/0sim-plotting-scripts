@@ -9,14 +9,14 @@ from collections import OrderedDict
 
 from sys import argv, exit
 
+from paperstyle import MARKERS, FIGSIZE
+
 REGEX = r'^DONE [0-9]+ Duration { secs: ([0-9]+), nanos: ([0-9]+) }( [0-9]+)?$'
 
 SCALE = 1E6
 UNIT = 'msec'
 
 VALUE_SIZE = 1 << 19
-
-MARKERS = ['.', '>', '<', '*', 'v', '^', 'D', 'X', 'P', 'p', 's']
 
 data = OrderedDict()
 
@@ -37,7 +37,7 @@ for arg in argv[1:]:
 
             data[label].append(time / SCALE)
 
-plt.figure(1, figsize=(5, 3.5))
+plt.figure(1, figsize=FIGSIZE)
 
 markers = itertools.cycle(MARKERS)
 
