@@ -29,8 +29,9 @@ def parse_line(line):
     vals = m.group(2)
     vals = map(int, vals.split())
 
-    vals = list(vals)
-    vals += [0] * (20 - len(vals))
+    # Normalize to 20 free lists
+    #vals = list(vals)
+    #vals += [0] * (20 - len(vals))
 
     return vals
 
