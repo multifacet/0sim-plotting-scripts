@@ -21,15 +21,15 @@ RE = r'Node \d, zone\s+(DMA|DMA32|Normal)((\s+\d+)+)'
 data = []
 
 def parse_line(line):
-    m = re.match(RE, line)
+    m = re.match(RE, line.strip())
     if m is None:
-        print("No match: %s" % line)
+        print("No match: \"%s\"" % line)
+        return
 
     vals = m.group(2)
     vals = map(int, vals.split())
 
     return vals
-
 
 with open(FILE, 'r') as f:
     while True:
