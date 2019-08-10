@@ -118,6 +118,7 @@ ax1.plot(x, tdata, color="k")
 
 ax1.set_xlabel("Time (hours)")
 ax1.set_xlim((0, max(x)))
+ax1.set_ylim(bottom=0)
 ax1.set_ylabel("Free Phys\nMem (GB)")
 
 plt.grid(True)
