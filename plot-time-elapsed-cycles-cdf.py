@@ -14,7 +14,7 @@ from collections import OrderedDict
 
 from sys import argv, exit
 
-from paperstyle import MARKERS, COLORS, IS_PDF, FIGSIZE
+from paperstyle import MARKERS, COLORS, IS_PDF, FIGSIZE, LINE_STYLES
 
 freq = OrderedDict()
 data = OrderedDict()
@@ -125,7 +125,7 @@ mscale.register_scale(CloseToOne)
 
 plt.figure(1, figsize=FIGSIZE)
 
-markers = itertools.cycle(MARKERS)
+linestyles = itertools.cycle(LINE_STYLES)
 colors = itertools.cycle(COLORS)
 
 handles = []
@@ -144,11 +144,11 @@ for i, (label, xs) in enumerate(data.items()):
     mark_freq = [len(xs) / 10,
             (-len(xs) / 20000) if YSCALE == 'close_to_one' else (-len(xs) / 10)]
 
-    h_plot, = plt.plot(cdfx, cdfy, label = legend_label, linestyle = '-', marker = markers.next(), markevery = mark_freq, color = colors.next())
+    h_plot, = plt.plot(cdfx, cdfy, label = legend_label, linestyle = linestyles.next(), marker = 'None', color = colors.next())
 
     handles.append(h_plot)
 
-markers = itertools.cycle(MARKERS)
+linestyles = itertools.cycle(LINE_STYLES)
 colors = itertools.cycle(COLORS)
 
 for i, (label, xs) in enumerate(data1.items()):
@@ -166,7 +166,7 @@ for i, (label, xs) in enumerate(data1.items()):
             (-len(xs) / 20000) if YSCALE == 'close_to_one' else (-len(xs) / 10)]
 
     if len(xs) > 0:
-        h_plot, = plt.plot(cdfx, cdfy, label = legend_label, linestyle = '--', marker = markers.next(), markevery = mark_freq, color = colors.next())
+        h_plot, = plt.plot(cdfx, cdfy, label = legend_label, linestyle = linestyles.next(), marker = 'None', color = colors.next())
         handles.append(h_plot)
 
 plt.ylim((0, 99.999) if YSCALE == "close_to_one" else (0, 100))

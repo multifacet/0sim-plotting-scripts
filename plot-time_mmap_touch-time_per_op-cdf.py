@@ -9,7 +9,7 @@ from collections import OrderedDict
 
 from sys import argv, exit
 
-from paperstyle import COLORS, IS_PDF, MARKERS, FIGSIZE
+from paperstyle import COLORS, IS_PDF, MARKERS, FIGSIZE, LINE_STYLES
 
 data = OrderedDict()
 
@@ -40,7 +40,7 @@ for arg in argv[1:]:
 
 plt.figure(1, figsize=FIGSIZE)
 
-markers = itertools.cycle(MARKERS)
+linestyles = itertools.cycle(LINE_STYLES)
 colors = itertools.cycle(COLORS)
 
 handles = []
@@ -49,7 +49,7 @@ for label, xs in data.items():
     cdfx = np.sort(xs)
     cdfy = np.linspace(0.0, 100.0, len(xs))
     mark_freq = [len(xs) / 10, -len(xs) / 10]
-    h_plot, = plt.plot(cdfx, cdfy, label = label, linestyle = '-', marker = markers.next(), markevery=mark_freq, color = colors.next())
+    h_plot, = plt.plot(cdfx, cdfy, label = label, linestyle = linestyles.next(), marker = 'None', color = colors.next())
     handles.append(h_plot)
 
 plt.legend(handles=handles, loc='lower right')

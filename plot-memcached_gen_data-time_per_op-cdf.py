@@ -9,7 +9,7 @@ from collections import OrderedDict
 
 from sys import argv, exit
 
-from paperstyle import COLORS, MARKERS, IS_PDF, FIGSIZE
+from paperstyle import COLORS, MARKERS, IS_PDF, FIGSIZE, LINE_STYLES
 
 REGEX = r'^DONE [0-9]+ Duration { secs: ([0-9]+), nanos: ([0-9]+) }( [0-9]+)?$'
 
@@ -40,15 +40,14 @@ for arg in argv[1:]:
 plt.figure(1, figsize=FIGSIZE)
 
 colors = itertools.cycle(COLORS)
-markers = itertools.cycle(MARKERS)
+linestyles = itertools.cycle(LINE_STYLES)
 
 handles = []
 
 for label, xs in data.items():
     cdfx = np.sort(xs)
     cdfy = np.linspace(0.0, 100.0, len(xs))
-    mark_freq = [len(xs) / 10, -len(xs) / 10]
-    h_plot, = plt.plot(cdfx, cdfy, label = label, linestyle = '-', marker = markers.next(), markevery=mark_freq, color = colors.next())
+    h_plot, = plt.plot(cdfx, cdfy, label = label, linestyle = linestyles.next(), marker = 'None', color = colors.next())
     handles.append(h_plot)
 
 plt.legend(handles=handles, loc='lower right')

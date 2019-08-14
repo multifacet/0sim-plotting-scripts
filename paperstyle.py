@@ -3,6 +3,7 @@ import os
 
 COLORS=["r", "k", "b", "g"]
 MARKERS = ['.', '>', '<', '*', 'v', '^', 'D', 'X', 'P', 'p', 's']
+LINE_STYLES=[":","-.","--","-"]
 
 IS_PDF = True
 
