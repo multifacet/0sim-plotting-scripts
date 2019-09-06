@@ -23,6 +23,8 @@ has_data1 = False
 
 YSCALE = argv[1]
 
+print("Usage: ./scripts <linear|close_to_one> label:filename:[snd_filename]:freq_khz")
+
 for arg in argv[2:]:
     label, filename, snd_filename, freq_khz = arg.split(":")
 

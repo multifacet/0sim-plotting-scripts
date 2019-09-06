@@ -13,6 +13,8 @@ from paperstyle import COLORS, IS_PDF, MARKERS, FIGSIZE, LINE_STYLES
 
 data = OrderedDict()
 
+print("Usage: ./script label:filename:freq")
+
 def rdtsc_to_usec(ticks, freq):
     return ticks / float(freq) * 1000.0
 
