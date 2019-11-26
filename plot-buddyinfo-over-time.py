@@ -58,6 +58,7 @@ x = x / 3600
 
 # normalize all values to get percentages
 def normalize(sample):
+    sample = [s << order for (order, s) in enumerate(sample)]
     total = sum(sample)
     return [s * 100. / total for s in sample]
 
