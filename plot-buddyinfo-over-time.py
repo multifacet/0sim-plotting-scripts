@@ -57,10 +57,9 @@ x = np.arange(len(data)) * INTERVAL
 x = x / 3600
 
 # normalize all values to get percentages
-def normalize(sample):
-    sample = [s << order for (order, s) in enumerate(sample)]
-    total = sum(sample)
-    return [s * 100. / total for s in sample]
+def gbs(sample):
+    sample = [(((s << order) << 12) >> 30) for (order, s) in enumerate(sample)]
+    return sample
 
 # get the amount of free memory
 def nfree(sample):
@@ -75,7 +74,7 @@ def nfree(sample):
 
     return total
 
-ndata = list(map(normalize, data))
+ndata = list(map(gbs, data))
 tdata = list(map(nfree, data))
 
 ndata_transpose = [*zip(*ndata)]
@@ -93,10 +92,12 @@ ax0 = plt.subplot(gs[0, 0])
 
 ax0.stackplot(x, *ndata_transpose, labels=labels, colors=colors)
 
-ax0.set_ylabel("% of Free Pages")
-ax0.set_ylim((0, 100))
+ax0.set_ylabel("Free Memory (GB; truncated at 400GB)")
+ax0.set_ylim((0, 400))
+ax0.set_xlabel("Time (hours)")
+ax0.set_xlim((0, max(x)))
 
-plt.setp(ax0.get_xticklabels(), visible=False)
+#plt.setp(ax0.get_xticklabels(), visible=False)
 
 ax0.grid(True)
 
@@ -113,14 +114,14 @@ cb.set_label('Free List Order')
 
 # little plot with # pages
 
-ax1 = plt.subplot(gs[1, 0], sharex = ax0)
-
-ax1.plot(x, tdata, color="k")
-
-ax1.set_xlabel("Time (hours)")
-ax1.set_xlim((0, max(x)))
-ax1.set_ylim(bottom=0)
-ax1.set_ylabel("Free Phys\nMem (GB)")
+#ax1 = plt.subplot(gs[1, 0], sharex = ax0)
+#
+#ax1.plot(x, tdata, color="k")
+#
+#ax1.set_xlabel("Time (hours)")
+#ax1.set_xlim((0, max(x)))
+#ax1.set_ylim(bottom=0)
+#ax1.set_ylabel("Free Phys\nMem (GB)")
 
 plt.grid(True)
 

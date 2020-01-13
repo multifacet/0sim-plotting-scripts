@@ -49,40 +49,37 @@ overhead_server = [
         ]
 overhead_server = [1/(1-x) for x in overhead_server]
 
+colors = itertools.cycle(COLORS)
+wk_old_color = colors.next()
+neutral_color = colors.next()
+server_color = colors.next()
+
 fig, ax1 = plt.subplots(figsize=FIGSIZE)
 
 ax1.set_xlabel('Number of simulated cores')
 plt.grid()
 
-colors = itertools.cycle(COLORS)
-markers = itertools.cycle(MARKERS)
-
 width = 0.35
 
 ax1.set_ylabel('Simulation Duration (hours)')
-ax1.bar(ncores - width/2, runtime_wk_old, width, alpha=0.5, color = colors.next())
-ax1.bar(ncores + width/2, runtime_server, width, alpha=0.5, color = colors.next())
+ax1.bar(ncores - width/2, runtime_wk_old, width, alpha=0.5, color = wk_old_color)
+ax1.bar(ncores + width/2, runtime_server, width, alpha=0.5, color = server_color)
 ax1.tick_params(axis='y')
 ax1.set_ylim((0, 5))
 
 ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
 
-colors = itertools.cycle(COLORS)
-
 ax2.set_ylabel('Slowdown vs Native (x)')
-ax2.plot(ncores, overhead_wk_old, color = colors.next(), linestyle = '--')
-ax2.plot(ncores, overhead_server, color = colors.next(), linestyle = '--')
+ax2.plot(ncores, overhead_wk_old, color = wk_old_color, linestyle = '--')
+ax2.plot(ncores, overhead_server, color = server_color, linestyle = '--')
 ax2.tick_params(axis='y')
 ax2.set_yticks(np.linspace(ax2.get_yticks()[0], ax2.get_yticks()[-1], len(ax1.get_yticks())))
 
-extra_color = colors.next()
-colors = itertools.cycle(COLORS)
-
 custom_lgd = [
-        Line2D([0], [0], color = colors.next(), lw=4),
-        Line2D([0], [0], color = colors.next(), lw=4),
-        Patch(facecolor = extra_color),
-        Line2D([0], [0], color = extra_color, linestyle = "--")
+        Line2D([0], [0], color = wk_old_color, lw=4),
+        Line2D([0], [0], color = server_color, lw=4),
+        Patch(facecolor = neutral_color),
+        Line2D([0], [0], color = neutral_color, linestyle = "--")
         ]
 lgd_text = [
         "wk-old",
