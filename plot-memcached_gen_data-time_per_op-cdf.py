@@ -9,7 +9,7 @@ from collections import OrderedDict
 
 from sys import argv, exit
 
-from paperstyle import COLORS, MARKERS, IS_PDF, FIGSIZE, LINE_STYLES
+from paperstyle import COLORS, MARKERS, IS_PDF, FIGSIZE, LINE_STYLES, SLIDE_PLOT, HIDDEN
 
 REGEX = r'^DONE [0-9]+ Duration { secs: ([0-9]+), nanos: ([0-9]+) }( [0-9]+)?$'
 
@@ -47,7 +47,12 @@ handles = []
 for label, xs in data.items():
     cdfx = np.sort(xs)
     cdfy = np.linspace(0.0, 100.0, len(xs))
-    h_plot, = plt.plot(cdfx, cdfy, label = label, linestyle = linestyles.next(), marker = 'None', color = colors.next())
+    ls = '-' if SLIDE_PLOT else linestyles.next()
+    if label in HIDDEN:
+        ls = 'None'
+        label = None
+    lw = 3 if SLIDE_PLOT else 1
+    h_plot, = plt.plot(cdfx, cdfy, label = label, linestyle = ls, linewidth=lw, marker = 'None', color = colors.next())
     handles.append(h_plot)
 
 plt.legend(handles=handles, loc='lower right')
@@ -58,6 +63,8 @@ plt.ylim((0, 100))
 
 plt.xlabel('Latency of Operations (%s)' % UNIT)
 plt.ylabel("% of Operations")
+
+plt.title('')
 
 plt.grid(True)
 

@@ -10,7 +10,7 @@ import re
 
 from sys import argv, exit
 
-from paperstyle import IS_PDF, FIGSIZE
+from paperstyle import IS_PDF, FIGSIZE, SLIDE_PLOT
 
 FILE = argv[1]
 
@@ -92,7 +92,7 @@ ax0 = plt.subplot(gs[0, 0])
 
 ax0.stackplot(x, *ndata_transpose, labels=labels, colors=colors)
 
-ax0.set_ylabel("Free Memory (GB; truncated at 400GB)")
+ax0.set_ylabel("Free Memory\n(GB; truncated at 400GB)")
 ax0.set_ylim((0, 400))
 ax0.set_xlabel("Time (hours)")
 ax0.set_xlim((0, max(x)))
@@ -103,6 +103,8 @@ ax0.grid(True)
 
 # Color bar
 
+print(FIGSIZE)
+
 cbax = plt.subplot(gs[0, 1])
 
 bounds = np.arange(0, len(labels), 1)
@@ -110,7 +112,21 @@ ticks = list(range(0, len(labels), 4)) + [len(labels)-1]
 cmap = mpl.colors.ListedColormap(cm.rainbow(np.linspace(1, 0, len(labels))))
 norm = mpl.colors.Normalize(vmin=-0.5, vmax=len(labels)-0.5)
 cb = mpl.colorbar.ColorbarBase(cbax, cmap=cmap, norm=norm, ticks=ticks, spacing='proportional', orientation='vertical')
-cb.set_label('Free List Order')
+if SLIDE_PLOT:
+    def to_bytes(t):
+        if t < (1<<10):
+            return "{}B".format(t)
+        if t < (1<<20):
+            return "{}KB".format(t>>10)
+        if t < (1<<30):
+            return "{}MB".format(t>>20)
+
+        return "{}GB".format(t>>30)
+
+    cb.ax.set_yticklabels([to_bytes(1<<(t+12)) for t in ticks])
+    cb.set_label('Contiguous Chunk Size')
+else:
+    cb.set_label('Free List Order')
 
 # little plot with # pages
 

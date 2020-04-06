@@ -88,7 +88,7 @@ lgd_text = [
         "Slowdown"
         ]
 
-ax2.legend(custom_lgd, lgd_text, loc = 'upper center', ncol = 2)
+ax1.legend(custom_lgd, lgd_text, loc = 'upper center', ncol = 2)
 
 plt.savefig("/tmp/figure.%s" % ("pdf" if IS_PDF else "png"), bbox_inches="tight")
 

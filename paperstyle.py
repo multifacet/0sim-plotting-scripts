@@ -7,9 +7,22 @@ COLORS=["r", "k", "b", "g", "y", "purple", "cyan"]
 MARKERS = ['.', '>', '<', '*', 'v', '^', 'D', 'X', 'P', 'p', 's']
 LINE_STYLES=[":","-.","--","-"]
 
-IS_PDF = True
+IS_PDF = False
 
 SLIDES_FONT_SIZE = 18
+
+SLIDE_PLOT = False
+HIDDEN = []
+
+if os.environ.get("FONT_SIZE") is not None:
+    SLIDES_FONT_SIZE = int(os.environ.get("FONT_SIZE"))
+    matplotlib.rcParams.update({'font.size': SLIDES_FONT_SIZE})
+
+if os.environ.get("SLIDE_PLOT") is not None:
+    SLIDE_PLOT = True
+
+if os.environ.get("HIDDEN") is not None:
+    HIDDEN = os.environ.get("HIDDEN").split(',')
 
 def _figsize():
     if os.environ.get("SMALL_PLOT") is not None:
@@ -19,7 +32,7 @@ def _figsize():
         matplotlib.rcParams.update({'font.size': SLIDES_FONT_SIZE})
         plt.title(os.environ.get("SLIDE_PLOT"))
 
-        return (8, 6)
+        return (8, 5)
     else:
         return (5, 3.5)
 
