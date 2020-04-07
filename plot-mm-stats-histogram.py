@@ -58,7 +58,7 @@ x = np.arange(NBINS+2)
 for (i, (d, l)) in enumerate(zip(data, data_labels)):
     plt.bar(x + WIDTH / 2 - TOTAL_WIDTH / 2 + i * WIDTH, d, label=l, width=WIDTH)
 
-plt.xticks(x, labels, rotation=70)
+plt.xticks(x, labels, rotation=60, ha='right')
 plt.yscale('log')
 
 plt.ylabel("Number of Page Faults")
