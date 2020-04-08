@@ -3,10 +3,10 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-USAGE = "Usage: [FREQ=freq_mhz] ./script is_exp min nbins width [too_low too_high bin0 bin1 ... name]... "
-
 from sys import argv, exit
 from os import environ
+
+USAGE = "Usage: [FREQ=freq_mhz] ./script is_exp min nbins width [too_low too_high bin0 bin1 ... name]... "
 
 if len(argv) < 8:
     print(USAGE)
