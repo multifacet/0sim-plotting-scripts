@@ -93,10 +93,10 @@ for (i, (d, l)) in enumerate(zip(data, data_labels)):
 plt.xticks(x, labels, rotation=60, ha='right')
 plt.yscale('symlog')
 
-plt.ylabel("Number of Page Faults")
-plt.xlabel("Page Fault Latency (%s)" % ("cycles" if FREQ is None else "usec"))
+plt.ylabel("Frequency")
+plt.xlabel("Latency (%s)" % ("cycles" if FREQ is None else "usec"))
 
-plt.legend()
+plt.legend(bbox_to_anchor=(0, 1.02, 1, 0.2), loc="lower left", mode="expand")
 
 plt.ylim((0, max_all))
 plt.tight_layout()

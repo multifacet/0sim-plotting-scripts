@@ -6,6 +6,8 @@ import numpy as np
 from sys import argv, exit
 from os import environ
 
+from paperstyle import FIGSIZE, IS_PDF
+
 USAGE = "Usage: [FREQ=freq_mhz] ./script is_exp min nbins width [too_low too_high bin0 bin1 ... name]... "
 
 if len(argv) < 8:
@@ -55,6 +57,8 @@ TOTAL_WIDTH = 0.7
 WIDTH = TOTAL_WIDTH / NDATASETS
 x = np.arange(NBINS+2)
 
+plt.figure(figsize=FIGSIZE)
+
 for (i, (d, l)) in enumerate(zip(data, data_labels)):
     plt.bar(x + WIDTH / 2 - TOTAL_WIDTH / 2 + i * WIDTH, d, label=l, width=WIDTH)
 
@@ -68,4 +72,5 @@ plt.legend()
 
 plt.tight_layout()
 
+plt.savefig("/tmp/figure.%s" % ("pdf" if IS_PDF else "png"), bbox_inches="tight")
 plt.show()

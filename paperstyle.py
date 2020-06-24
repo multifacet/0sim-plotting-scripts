@@ -14,6 +14,9 @@ SLIDES_FONT_SIZE = 18
 SLIDE_PLOT = False
 HIDDEN = []
 
+if os.environ.get("PDF") is not None:
+    IS_PDF = True
+
 if os.environ.get("FONT_SIZE") is not None:
     SLIDES_FONT_SIZE = int(os.environ.get("FONT_SIZE"))
     matplotlib.rcParams.update({'font.size': SLIDES_FONT_SIZE})
