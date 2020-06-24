@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -19,7 +19,7 @@ MIN = int(argv[2])
 NBINS = int(argv[3])
 WIDTH = int(argv[4])
 
-NDATASETS = len(argv[5:]) / (NBINS + 3)
+NDATASETS = int(len(argv[5:]) / (NBINS + 3))
 
 data_labels = []
 data = []
@@ -40,8 +40,8 @@ else: # linear bins
     bin_upper_bounds = [MIN + (i+1)*WIDTH for i in range(NBINS)]
 
 if FREQ is not None:
-    bin_lower_bounds = map(lambda x: x / FREQ, bin_lower_bounds)
-    bin_upper_bounds = map(lambda x: x / FREQ, bin_upper_bounds)
+    bin_lower_bounds = list(map(lambda x: x / FREQ, bin_lower_bounds))
+    bin_upper_bounds = list(map(lambda x: x / FREQ, bin_upper_bounds))
 
 # create some text bin labels for the plot.
 labels = ["< {:.1f}".format(bin_upper_bounds[0])]

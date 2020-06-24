@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -47,15 +47,15 @@ handles = []
 for label, xs in data.items():
     cdfx = np.sort(xs)
     cdfy = np.linspace(0.0, 100.0, len(xs))
-    ls = '-' if SLIDE_PLOT else linestyles.next()
+    ls = '-' if SLIDE_PLOT else next(linestyles)
     if label in HIDDEN:
         ls = 'None'
         label = None
     lw = 3 if SLIDE_PLOT else 1
-    h_plot, = plt.plot(cdfx, cdfy, label = label, linestyle = ls, linewidth=lw, marker = 'None', color = colors.next())
+    h_plot, = plt.plot(cdfx, cdfy, label = label, linestyle = ls, linewidth=lw, marker = 'None', color = next(colors))
     handles.append(h_plot)
 
-plt.legend(handles=handles, loc='lower right')
+plt.legend(handles=handles, loc='upper left')
 
 plt.xscale('log')
 
