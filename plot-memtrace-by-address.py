@@ -49,25 +49,26 @@ big_array = []
 
 for addr in sorted(per_addr.keys(), reverse=True):
     data = per_addr[addr]
-    #counts = [log(d[0]) if d[0] > 1 else d[0] for d in data]
-    counts = [d[0] for d in data]
+    counts = [log(d[0]) if d[0] > 1 else d[0] for d in data]
+    #counts = [d[0] for d in data]
     counts = np.diff(counts)
     big_array.append(counts)
     #plt.plot(counts, label=addr)
 
 print("processed")
 
-LABEL_FREQ=200
-labels = list(map(lambda x: hex(x), sorted(per_addr.keys(), reverse=True)))[::LABEL_FREQ]
+#LABEL_FREQ=1000
+#labels = list(map(lambda x: hex(x), sorted(per_addr.keys(), reverse=True)))[::LABEL_FREQ]
 
 im = plt.imshow(big_array, cmap = "Greys", aspect='auto')
 cbar = plt.colorbar(im)
-cbar.set_label("Number of accesses")
+cbar.set_label("Log Number of accesses")
 
-plt.ylabel('Huge page Address')
-plt.xlabel('Time (# memory accesses)')
+plt.ylabel('Huge page Address (sorted)')
+plt.xlabel('Time (# memory accesses, chunks of 1-billion accesses)')
 plt.gca().set_yticklabels(plt.gca().get_yticks(), {'family':'monospace'})
-plt.yticks(np.arange(0, len(labels)*LABEL_FREQ, LABEL_FREQ), labels)
+#plt.yticks(np.arange(0, len(labels)*LABEL_FREQ, LABEL_FREQ), labels)
+plt.yticks([])
 
 ax = fig.axes[0]
 ax.spines['left'].set_visible(False)
@@ -80,4 +81,4 @@ plt.tight_layout()
 if "NOX" not in environ:
     plt.show()
 
-plt.savefig('/tmp/figure.png')
+plt.savefig('{}.png'.format(filename))
