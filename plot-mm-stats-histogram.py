@@ -2,6 +2,7 @@
 
 import matplotlib.pyplot as plt
 import numpy as np
+import math
 
 from sys import argv, exit
 from os import environ
@@ -15,6 +16,7 @@ if len(argv) < 8:
     exit(1)
 
 FREQ = float(environ["FREQ"]) if environ["FREQ"] is not None else None
+SIMPLE_X = "SIMPLE_X" in environ
 
 IS_EXP = argv[1] == "1"
 MIN = int(argv[2])
@@ -45,13 +47,6 @@ if FREQ is not None:
     bin_lower_bounds = list(map(lambda x: x / FREQ, bin_lower_bounds))
     bin_upper_bounds = list(map(lambda x: x / FREQ, bin_upper_bounds))
 
-# create some text bin labels for the plot.
-labels = ["< {:.1f}".format(bin_upper_bounds[0])]
-for (l, u) in zip(bin_lower_bounds, bin_upper_bounds):
-    l = "[{:.1f}, {:.1f})".format(l, u)
-    labels.append(l)
-labels.append(">= {:.1f}".format(bin_upper_bounds[-1]))
-
 # plot
 TOTAL_WIDTH = 0.7
 WIDTH = TOTAL_WIDTH / NDATASETS
@@ -62,11 +57,46 @@ plt.figure(figsize=FIGSIZE)
 for (i, (d, l)) in enumerate(zip(data, data_labels)):
     plt.bar(x + WIDTH / 2 - TOTAL_WIDTH / 2 + i * WIDTH, d, label=l, width=WIDTH)
 
-plt.xticks(x, labels, rotation=60, ha='right')
+# create some text bin labels for the plot.
+if SIMPLE_X:
+    min_order = math.ceil(math.log10(bin_lower_bounds[0]))
+    max_order = math.floor(math.log10(bin_lower_bounds[-1]))
+
+    label_xs = [10**o for o in range(min_order, max_order+1)]
+
+    width = math.log2(bin_upper_bounds[-1] - bin_lower_bounds[0])
+    label_pos = [NBINS * math.log2(v / bin_lower_bounds[0]) / width for v in label_xs]
+
+    def order_to_text(o):
+        if o < 0:
+            return "%d ns" % (10 ** (o+3))
+        elif o < 3:
+            return "%d us" % (10 ** o)
+        elif o < 6:
+            return "%d ms" % (10 ** (o-3))
+        else:
+            return "%d s" % (10 ** (o-6))
+
+    labels = [order_to_text(o) for o in range(min_order, max_order+1)]
+
+    plt.xticks(label_pos, labels, rotation=60, ha='right')
+
+else:
+    labels = ["< {:.1f}".format(bin_lower_bounds[0])]
+    for (l, u) in zip(bin_lower_bounds, bin_upper_bounds):
+        l = "[{:.1f}, {:.1f})".format(l, u)
+        labels.append(l)
+    labels.append(">= {:.1f}".format(bin_upper_bounds[-1]))
+
+    plt.xticks(x, labels, rotation=60, ha='right')
+
 plt.yscale('log')
 
 plt.ylabel("Number of Page Faults")
-plt.xlabel("Page Fault Latency (%s)" % ("cycles" if FREQ is None else "usec"))
+if SIMPLE_X:
+    plt.xlabel("Page Fault Latency")
+else:
+    plt.xlabel("Page Fault Latency (%s)" % ("cycles" if FREQ is None else "usec"))
 
 plt.legend()
 
