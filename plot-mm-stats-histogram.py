@@ -15,7 +15,7 @@ if len(argv) < 8:
     print(USAGE)
     exit(1)
 
-FREQ = float(environ["FREQ"]) if environ["FREQ"] is not None else None
+FREQ = float(environ["FREQ"]) if "FREQ" in environ else None
 SIMPLE_X = "SIMPLE_X" in environ
 
 IS_EXP = argv[1] == "1"
