@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import matplotlib.pyplot as plt
+import matplotlib.ticker as mtick
 import numpy as np
 import math
 
@@ -17,6 +18,7 @@ if len(argv) < 8:
 
 FREQ = float(environ["FREQ"]) if "FREQ" in environ else None
 SIMPLE_X = "SIMPLE_X" in environ
+PERCENTAGE_Y = "PERCENTAGE_Y" in environ
 
 IS_EXP = argv[1] == "1"
 MIN = int(argv[2])
@@ -25,6 +27,7 @@ WIDTH = int(argv[4])
 
 NDATASETS = int(len(argv[5:]) / (NBINS + 3))
 
+sum_data = 0
 data_labels = []
 data = []
 for i in range(NDATASETS):
@@ -32,6 +35,7 @@ for i in range(NDATASETS):
     # data..., too_high
     d += map(lambda x: int(x), argv[5 + i*(NBINS + 3) + 1 : 5 + (i+1)*(NBINS + 3) - 1])
     data.append(d)
+    sum_data += sum(d)
     data_labels.append(argv[5 + (i+1)*(NBINS + 3)-1])
 
 # compute the boundaries of each bin.
@@ -55,6 +59,8 @@ x = np.arange(NBINS+2)
 plt.figure(figsize=FIGSIZE)
 
 for (i, (d, l)) in enumerate(zip(data, data_labels)):
+    if PERCENTAGE_Y:
+        d = [float(d) / sum_data * 100.0 for d in d]
     plt.bar(x + WIDTH / 2 - TOTAL_WIDTH / 2 + i * WIDTH, d, label=l, width=WIDTH)
 
 # create some text bin labels for the plot.
@@ -92,7 +98,12 @@ else:
 
 plt.yscale('log')
 
-plt.ylabel("Number of Page Faults")
+if PERCENTAGE_Y:
+    plt.ylabel("Percentage of Page Faults")
+    plt.gca().yaxis.set_major_formatter(mtick.PercentFormatter(decimals=5))
+else:
+    plt.ylabel("Number of Page Faults")
+
 if SIMPLE_X:
     plt.xlabel("Page Fault Latency")
 else:

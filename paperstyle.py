@@ -36,6 +36,8 @@ def _figsize():
         plt.title(os.environ.get("SLIDE_PLOT"))
 
         return (8, 5)
+    elif os.environ.get("SHORT_PLOT") is not None:
+        return (5, 2.0)
     else:
         return (5, 3.5)
 
