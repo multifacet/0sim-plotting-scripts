@@ -17,6 +17,11 @@ HIDDEN = []
 if os.environ.get("PDF") is not None:
     IS_PDF = True
 
+if os.environ.get("OUTFNAME") is not None:
+    OUTFNAME = os.environ.get("OUTFNAME")
+else:
+    OUTFNAME = "figure"
+
 if os.environ.get("FONT_SIZE") is not None:
     SLIDES_FONT_SIZE = int(os.environ.get("FONT_SIZE"))
     matplotlib.rcParams.update({'font.size': SLIDES_FONT_SIZE})
