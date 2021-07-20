@@ -12,6 +12,7 @@ IS_PDF = False
 SLIDES_FONT_SIZE = 18
 
 SLIDE_PLOT = False
+SMALL_PLOT = False
 HIDDEN = []
 
 if os.environ.get("PDF") is not None:
@@ -31,6 +32,9 @@ if os.environ.get("SLIDE_PLOT") is not None:
 
 if os.environ.get("HIDDEN") is not None:
     HIDDEN = os.environ.get("HIDDEN").split(',')
+
+if os.environ.get("SMALL_PLOT") is not None:
+    SMALL_PLOT = True
 
 def _figsize():
     if os.environ.get("SMALL_PLOT") is not None:
