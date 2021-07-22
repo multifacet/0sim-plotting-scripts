@@ -2,6 +2,7 @@
 
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.lines import Line2D
 
 import re
 import itertools
@@ -16,15 +17,12 @@ from os import environ
 from paperstyle import FIGSIZE, IS_PDF, OUTFNAME, SMALL_PLOT
 
 USAGE_STR = """
-[FREQ=freq_mhz] ./script <stylesfile> <label> <P0> <P1> ... <P100> <label> <P0> <P1> ... <P100> ...
-where <stylesfile> is a list of labels, one per line
+[FREQ=freq_mhz] ./script <stylesfile> <which>
 """
 
-if len(argv[2:]) % 102 != 0:
+if len(argv) < 3:
     print("./Usage: %s" %  USAGE_STR)
-
-FREQ = float(environ["FREQ"]) if "FREQ" in environ else None
-NPLOTS = int(len(argv[2:]) / 102)
+    exit(1)
 
 SHORTER_NAMES = {
         "HUGE_PAGE": "HUGE",
@@ -69,14 +67,6 @@ def nice_label(raw):
     nice = fill(nice, n)
     return nice
 
-#CYCLER = (cycler(color=['r', 'g', 'b', 'y', 'c', 'm', 'k']) + cycler(linestyle=['-', '--', ':', '-.']))
-#colormap = plt.cm.nipy_spectral
-#colors = [colormap(i) for i in np.linspace(0, 1, NPLOTS)]
-#styles = itertools.cycle(['-', '--', ':', '-.'])
-#plt.gca().set_prop_cycle('color', colors)
-
-plt.figure(figsize=FIGSIZE)
-
 def shorten(l):
     out = l
 
@@ -85,32 +75,46 @@ def shorten(l):
 
     return out
 
-for i in range(NPLOTS):
-    label = shorten(argv[2+i*102])
-    xs = [float(x) for x in argv[2+i*102+1:2+(i+1)*102]]
-    if FREQ is not None:
-        xs = [x / FREQ for x in xs]
-    ys = [y for y in range(0, 101)] # 0 ..= 100
-    c, s = style(label)
-    plt.plot(xs, ys, label=nice_label(label), color=c, linestyle=s)
+WHICH=[]
+with open(argv[2]) as f:
+    labels = map(lambda x: x.strip(), f.readlines())
+    WHICH = list(map(shorten, labels))
 
-    print(label.split("(")[0])
+#CYCLER = (cycler(color=['r', 'g', 'b', 'y', 'c', 'm', 'k']) + cycler(linestyle=['-', '--', ':', '-.']))
+#colormap = plt.cm.nipy_spectral
+#colors = [colormap(i) for i in np.linspace(0, 1, NPLOTS)]
+#styles = itertools.cycle(['-', '--', ':', '-.'])
+#plt.gca().set_prop_cycle('color', colors)
 
-plt.xscale("symlog")
-plt.xticks(rotation=90)
-plt.xlabel("Latency (%s)" % ("cycles" if FREQ is None else "usec"))
+plt.figure(figsize=FIGSIZE)
 
-plt.ylabel("Percentile")
+lines = []
+for l in WHICH:
+    c, s= style(l)
+    line = Line2D([0], [0], color=c, ls=s)
+    lines.append(line)
 
-plt.grid(True)
+    #handle = plt.plot([1], [1], color=c, ls=s)[0]
+    #lines.append(handle)
 
-if environ.get("NOLEGEND") is None:
-    plt.legend(bbox_to_anchor=(-0.05, 1.05), loc='lower left')
-    #plt.legend(bbox_to_anchor=(1.05, 1.0), loc='upper left')
-    #plt.legend(bbox_to_anchor=(-0.3, 1.05), loc='lower left')
+#plt.legend(bbox_to_anchor=(1.05, 1.0), loc='upper left')
+#plt.legend(bbox_to_anchor=(-0.3, 1.05), loc='lower left')
+#plt.legend(bbox_to_anchor=(-0.05, 1.05), loc='lower left')
 
-#plt.tight_layout()
+#plt.gca().get_xaxis().set_visible(False)
+#plt.gca().get_yaxis().set_visible(False)
+plt.gca().axis('off')
 
-plt.savefig("/tmp/%s.%s" % (OUTFNAME, ("pdf" if IS_PDF else "png")), bbox_inches="tight")
+legend = plt.legend(lines, map(nice_label, WHICH), frameon=False, ncol=3, prop={'size': 8})
+plt.tight_layout()
+
+def export_legend(legend, filename):
+    fig  = legend.figure
+    fig.canvas.draw()
+    bbox  = legend.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
+    fig.savefig(filename, dpi="figure", bbox_inches=bbox)
+
+export_legend(legend, "/tmp/%s.%s" % (OUTFNAME, ("pdf" if IS_PDF else "png")))
 #plt.savefig("/tmp/%s.%s" % (OUTFNAME, ("pdf" if IS_PDF else "png")))
 plt.show()
+
