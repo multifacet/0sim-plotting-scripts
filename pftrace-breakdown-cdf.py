@@ -108,6 +108,8 @@ if environ.get("NOLEGEND") is None:
     plt.legend(bbox_to_anchor=(-0.05, 1.05), loc='lower left')
     #plt.legend(bbox_to_anchor=(1.05, 1.0), loc='upper left')
     #plt.legend(bbox_to_anchor=(-0.3, 1.05), loc='lower left')
+else:
+    plt.xlim((1, 1e6))
 
 #plt.tight_layout()
 
