@@ -19,7 +19,9 @@ from paperstyle import FIGSIZE, IS_PDF, OUTFNAME, SMALL_PLOT
 
 INFILE=argv[1]
 
-MOVING_AVERAGE_WINDOW=10
+MOVING_AVERAGE_WINDOW=1
+
+XBUFFER=2
 
 control = None
 data = []
@@ -75,8 +77,8 @@ ax2.plot(store_walk_cycles, color="red")
 ax2.plot(load_walk_cycles, color="blue")
 ax2.set_ylabel("Norm. Page\nWalk Cycles")
 
-ax1.set_xlim((0, len(xs)))
-ax2.set_xlim((0, len(xs)))
+ax1.set_xlim((0 - XBUFFER, len(xs)+XBUFFER))
+ax2.set_xlim((0 - XBUFFER, len(xs)+XBUFFER))
 
 ax1.get_xaxis().set_visible(False)
 #ax1.set_ylim(top=105)
