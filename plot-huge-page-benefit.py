@@ -48,9 +48,14 @@ with open(INFILE, 'r') as f:
 def moving_average(x, w):
     return np.convolve(x, np.ones(w), 'valid') / w
 
-normalized_runtime = moving_average([d[3] / control[3] * 100. for d in data], MOVING_AVERAGE_WINDOW)
-store_walk_cycles = moving_average([100 - (control[1] / control[2] - d[1] / d[2])*100. for d in data], MOVING_AVERAGE_WINDOW)
-load_walk_cycles = moving_average([100 - (control[0] / control[2] - d[0] / d[2])*100. for d in data], MOVING_AVERAGE_WINDOW)
+#normalized_runtime = moving_average([d[3] / control[3] * 100. for d in data], MOVING_AVERAGE_WINDOW)
+#store_walk_cycles = moving_average([100 - (control[1] / control[2] - d[1] / d[2])*100. for d in data], MOVING_AVERAGE_WINDOW)
+#load_walk_cycles = moving_average([100 - (control[0] / control[2] - d[0] / d[2])*100. for d in data], MOVING_AVERAGE_WINDOW)
+
+normalized_runtime = moving_average([d[3] / control[3] * 100. - 100. for d in data], MOVING_AVERAGE_WINDOW)
+store_walk_cycles = moving_average([(d[1] / d[2] - control[1] / control[2])*100. for d in data], MOVING_AVERAGE_WINDOW)
+load_walk_cycles = moving_average([(d[0] / d[2] - control[0] / control[2])*100. for d in data], MOVING_AVERAGE_WINDOW)
+
 #store_walk_cycles = moving_average([((d[1] / d[2]) / (control[1] / control[2]))*100. for d in data], MOVING_AVERAGE_WINDOW)
 #load_walk_cycles = moving_average([((d[0] / d[2]) / (control[0] / control[2]))*100. for d in data], MOVING_AVERAGE_WINDOW)
 
@@ -67,8 +72,10 @@ gs.update(wspace=0.025, hspace=0.05)
 ax1 = plt.subplot(gs[0])
 ax2 = plt.subplot(gs[1])
 
-ax1.plot(xs, [100]*len(xs), color="black", lw=0.5, ls=":")
-ax2.plot(xs, [100]*len(xs), color="black", lw=0.5, ls=":")
+ax1.plot(xs, [0]*len(xs), color="black", lw=0.5, ls=":")
+ax2.plot(xs, [0]*len(xs), color="black", lw=0.5, ls=":")
+#ax1.plot(xs, [100]*len(xs), color="black", lw=0.5, ls=":")
+#ax2.plot(xs, [100]*len(xs), color="black", lw=0.5, ls=":")
 
 ax1.plot(normalized_runtime, color=(179/255., 167/255., 39/255.))
 ax1.set_ylabel("Norm.\nRuntime")
