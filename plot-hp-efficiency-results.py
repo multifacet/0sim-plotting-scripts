@@ -68,12 +68,10 @@ for i, (kernel, frag) in enumerate(series):
 
     if kernel == "CBMM":
         color = "lightblue"
-    elif kernel == "Hawkeye":
+    elif kernel == "HawkEye":
         color = "pink"
     else:
         color = "yellow"
-
-    print(kernel + " " + color)
 
     plt.bar(xs, ys,
             width=TOTALBARWIDTH / nseries, 
