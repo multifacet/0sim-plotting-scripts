@@ -20,6 +20,8 @@ USAGE_STR = """
 [FREQ=freq_mhz] ./script <stylesfile> <which>
 """
 
+NCOLS = 4
+
 if len(argv) < 3:
     print("./Usage: %s" %  USAGE_STR)
     exit(1)
@@ -105,7 +107,7 @@ for l in WHICH:
 #plt.gca().get_yaxis().set_visible(False)
 plt.gca().axis('off')
 
-legend = plt.legend(lines, map(nice_label, WHICH), frameon=False, ncol=3, prop={'size': 8})
+legend = plt.legend(lines, map(nice_label, WHICH), frameon=False, ncol=NCOLS, prop={'size': 8})
 plt.tight_layout()
 
 def export_legend(legend, filename):

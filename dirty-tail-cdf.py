@@ -104,6 +104,7 @@ for i in range(NPLOTS):
 plt.xscale("symlog")
 plt.xticks(rotation=90)
 plt.xlabel("Latency (%s)" % ("cycles" if FREQ is None else "usec"))
+plt.xlim((1,1e7))
 
 plt.ylabel("Percentile")
 plt.yscale("close_to_one")

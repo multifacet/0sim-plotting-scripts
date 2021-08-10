@@ -3,6 +3,7 @@
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import numpy as np
+from matplotlib.ticker import MultipleLocator
 
 import re
 import itertools
@@ -77,11 +78,11 @@ ax2.plot(xs, [0]*len(xs), color="black", lw=0.5, ls=":")
 #ax1.plot(xs, [100]*len(xs), color="black", lw=0.5, ls=":")
 #ax2.plot(xs, [100]*len(xs), color="black", lw=0.5, ls=":")
 
-ax1.plot(normalized_runtime, color=(179/255., 167/255., 39/255.))
+ax1.plot(normalized_runtime, color=(179/255., 167/255., 39/255.), label="Normalized Runtime")
 ax1.set_ylabel("Norm.\nRuntime")
 
-ax2.plot(store_walk_cycles, color="red")
-ax2.plot(load_walk_cycles, color="blue")
+ax2.plot(store_walk_cycles, color="red", label = "Normalized Store Page Walk Cycles")
+ax2.plot(load_walk_cycles, color="blue", label = "Normalized Load Page Walk Cycles")
 ax2.set_ylabel("Norm. Page\nWalk Cycles")
 
 ax1.set_xlim((0 - XBUFFER, len(xs)+XBUFFER))
@@ -90,9 +91,10 @@ ax2.set_xlim((0 - XBUFFER, len(xs)+XBUFFER))
 ax1.get_xaxis().set_visible(False)
 #ax1.set_ylim(top=105)
 
-ax2.set_xlabel("Address Space")
-ax2.get_xaxis().set_ticks([])
+ax2.set_xlabel("Address Range")
+#ax2.get_xaxis().set_ticks([])
 #ax2.set_ylim(bottom=0)
+ax2.set_xticks(np.arange(101), minor=True)
 
 #ax1.yaxis.get_major_formatter().set_scientific(False)
 #ax2.yaxis.get_major_formatter().set_scientific(False)
@@ -100,6 +102,8 @@ ax1.ticklabel_format(useOffset=False, style='plain')
 ax2.ticklabel_format(useOffset=False, style='plain')
 ax1.yaxis.set_label_position("right")
 ax2.yaxis.set_label_position("right")
+
+#plt.figlegend()
 
 plt.tight_layout()
 
