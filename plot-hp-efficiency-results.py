@@ -22,6 +22,8 @@ INFILE=argv[1]
 
 TOTALBARWIDTH = 0.65
 
+WORKLOAD_ORDER=["mcf", "xz", "canneal", "thp-ubmk", "memcached", "mongodb", "mix"]
+
 control = {}
 data = {}
 
@@ -39,13 +41,13 @@ with open(INFILE, 'r') as f:
         kernel = row["kernel"]
         frag = row["fragmentation"].lower() == "true"
 
-        data[(kernel, wkld, frag)] = efficiency
+        data[(kernel, wkld, frag)] = efficiency * 100.0
         series.append((kernel, frag))
 
         wklds.append(wkld)
 
 
-wklds = sorted(list(set(wklds)))
+wklds = sorted(list(set(wklds)), key = lambda w: WORKLOAD_ORDER.index(w))
 wklds = {w : i for i, w in enumerate(wklds)}
 series = list(sorted(set(series), key=lambda s: (s[1], s[0])))
 
@@ -80,7 +82,7 @@ for i, (kernel, frag) in enumerate(series):
             hatch="///" if frag else None,
             edgecolor="black")
 
-plt.ylabel("Huge Page Usage")
+plt.ylabel("% Backed by Huge Pages")
 
 plt.xlim((0.5, len(wklds) - 0.5))
 ticklabels = sorted(wklds, key=wklds.get)
@@ -91,6 +93,8 @@ for label in plt.gca().xaxis.get_majorticklabels():
     label.set_transform(label.get_transform() + ticklabeltrans)
 
 plt.legend(bbox_to_anchor=(0.5, 1), loc="lower center", ncol=2)
+
+plt.grid()
 
 plt.tight_layout()
 

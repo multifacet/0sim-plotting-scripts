@@ -32,10 +32,10 @@ with open(INFILE, 'r') as f:
 
     for row in reader:
         start = row["Start"]
-        load_walk_active = float(row["avg dtlb_load_misses.walk_active"])
-        store_walk_active = float(row["avg dtlb_store_misses.walk_active"])
-        cpu_unhalted = float(row["avg cpu_clk_unhalted.thread_any"])
-        runtime = float(row["avg Runtime (s)"])
+        load_walk_active = float(row["dtlb_load_misses.walk_active"])
+        store_walk_active = float(row["dtlb_store_misses.walk_active"])
+        cpu_unhalted = float(row["cpu_clk_unhalted.thread_any"])
+        runtime = float(row["Runtime (s)"])
 
         if start == "none":
             control = (load_walk_active, store_walk_active, cpu_unhalted, runtime)

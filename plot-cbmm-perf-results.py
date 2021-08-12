@@ -22,6 +22,8 @@ INFILE=argv[1]
 
 TOTALBARWIDTH = 0.65
 
+WORKLOAD_ORDER=["mcf", "xz", "canneal", "thp-ubmk", "memcached", "mongodb", "mix"]
+
 control = {}
 data = {}
 
@@ -77,7 +79,7 @@ for k, point in data.items():
     kernel, wkld, frag = k
     point.normalize(control[(wkld, frag)])
 
-wklds = sorted(list(set(wklds)))
+wklds = sorted(list(set(wklds)), key = lambda w: WORKLOAD_ORDER.index(w))
 wklds = {w : i for i, w in enumerate(wklds)}
 series = list(sorted(set(series), key=lambda s: (s[1], s[0])))
 
