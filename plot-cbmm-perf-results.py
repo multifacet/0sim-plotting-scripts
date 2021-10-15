@@ -22,7 +22,7 @@ INFILE=argv[1]
 
 TOTALBARWIDTH = 0.65
 
-WORKLOAD_ORDER=["mcf", "xz", "canneal", "thp-ubmk", "memcached", "mongodb", "mix"]
+WORKLOAD_ORDER=["mcf", "xz", "canneal", "thp-ubmk", "memcached", "mongodb", "mix", "geomean"]
 
 control = {}
 data = {}
@@ -73,6 +73,50 @@ with open(INFILE, 'r') as f:
 
         wklds.append(wkld)
 
+# Add geomean
+def geomean(vals):
+    # using the log here avoids overflow...
+    # credit: https://stackoverflow.com/questions/43099542/python-easy-way-to-do-geometric-mean-in-python
+    logs = np.log(vals)
+    return np.exp(logs.mean())
+
+    # arithmetic mean
+    #return float(sum(vals)) / len(vals)
+
+def geomean_all(points):
+    means = [x.mean for x in points]
+    stdevs = [x.stdev for x in points]
+    medians = [x.median for x in points]
+    maxis = [x.maxi for x in points]
+    minis = [x.mini for x in points]
+
+    return Point(
+            geomean(means),
+            geomean(stdevs),
+            geomean(medians),
+            geomean(maxis),
+            geomean(minis),
+            )
+
+kf = {}
+for (kernel, wkld, frag), point in data.items():
+    if (kernel, frag) not in kf:
+        kf[(kernel, frag)] = []
+    kf[(kernel, frag)].append(point)
+
+for (kernel, frag), points in kf.items():
+    data[(kernel, "geomean", frag)] = geomean_all(points)
+
+kf = {}
+for (wkld, frag), point in control.items():
+    if frag not in kf:
+        kf[frag] = []
+    kf[frag].append(point)
+
+for frag, points in kf.items():
+    control[("geomean", frag)] = geomean_all(points)
+
+wklds.append("geomean")
 
 # Normalize against Linux 
 for k, point in data.items():
