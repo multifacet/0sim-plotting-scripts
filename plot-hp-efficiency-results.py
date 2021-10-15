@@ -73,7 +73,8 @@ for i, (kernel, frag) in enumerate(series):
     elif kernel == "HawkEye":
         color = "pink"
     else:
-        color = "yellow"
+        color = "lightyellow"
+
 
     plt.bar(xs, ys,
             width=TOTALBARWIDTH / nseries, 

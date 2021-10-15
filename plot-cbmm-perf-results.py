@@ -123,6 +123,9 @@ for k, point in data.items():
     kernel, wkld, frag = k
     point.normalize(control[(wkld, frag)])
 
+    if wkld == "geomean":
+        print(kernel, frag, wkld, point)
+
 wklds = sorted(list(set(wklds)), key = lambda w: WORKLOAD_ORDER.index(w))
 wklds = {w : i for i, w in enumerate(wklds)}
 series = list(sorted(set(series), key=lambda s: (s[1], s[0])))
