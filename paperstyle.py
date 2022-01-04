@@ -43,6 +43,10 @@ if os.environ.get("SMALL_PLOT") is not None:
 def _figsize():
     if os.environ.get("SMALL_PLOT") is not None:
         return (3, 2.5)
+    elif os.environ.get("HALF_SLIDE_PLOT") is not None:
+        # Side-effect: increase font size, set title
+        matplotlib.rcParams.update({'font.size': SLIDES_FONT_SIZE})
+        return (8, 3.5)
     elif os.environ.get("SLIDE_PLOT") is not None:
         # Side-effect: increase font size, set title
         matplotlib.rcParams.update({'font.size': SLIDES_FONT_SIZE})

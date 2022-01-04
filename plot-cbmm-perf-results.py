@@ -9,6 +9,7 @@ import re
 import itertools
 import random
 import csv
+import copy
 from collections import OrderedDict
 from cycler import cycler
 from textwrap import fill
@@ -23,6 +24,9 @@ INFILE=argv[1]
 TOTALBARWIDTH = 0.65
 
 WORKLOAD_ORDER=["mcf", "xz", "canneal", "thp-ubmk", "memcached", "mongodb", "mix", "geomean"]
+COLORS = {"Linux": "lightyellow", "CBMM": "lightblue", "HawkEye": "pink", "Linux4.3": "black"}
+
+YMAX = 2.0
 
 control = {}
 data = {}
@@ -65,20 +69,37 @@ with open(INFILE, 'r') as f:
         kernel = row["kernel"]
         frag = row["fragmentation"] == "true"
 
+        if wkld == "thp-ubmk":
+            continue
+
+        #if not frag:
+        #    continue
+        #else:
+        #    frag = False
+
         if kernel == "Linux":
-            control[(wkld, frag)] = point
-        else:
-            data[(kernel, wkld, frag)] = point
-            series.append((kernel, frag))
+            control[(wkld, frag)] = copy.deepcopy(point)
+
+        data[(kernel, wkld, frag)] = point
+        series.append((kernel, frag))
 
         wklds.append(wkld)
+
+# Normalize against unfragmented Linux
+for k, point in data.items():
+    kernel, wkld, frag = k
+    #point.normalize(control[(wkld, frag)])
+    point.normalize(control[(wkld, False)])
+    #print(kernel, wkld, frag, point)
 
 # Add geomean
 def geomean(vals):
     # using the log here avoids overflow...
     # credit: https://stackoverflow.com/questions/43099542/python-easy-way-to-do-geometric-mean-in-python
     logs = np.log(vals)
-    return np.exp(logs.mean())
+    gm = np.exp(logs.mean())
+
+    return gm
 
     # arithmetic mean
     #return float(sum(vals)) / len(vals)
@@ -90,6 +111,8 @@ def geomean_all(points):
     maxis = [x.maxi for x in points]
     minis = [x.mini for x in points]
 
+    #print("geomean(%s) = %f" % (medians, geomean(medians)))
+
     return Point(
             geomean(means),
             geomean(stdevs),
@@ -98,33 +121,11 @@ def geomean_all(points):
             geomean(minis),
             )
 
-kf = {}
-for (kernel, wkld, frag), point in data.items():
-    if (kernel, frag) not in kf:
-        kf[(kernel, frag)] = []
-    kf[(kernel, frag)].append(point)
-
-for (kernel, frag), points in kf.items():
+for kernel, frag in series:
+    points = [p for (k, w, f), p in data.items() if k == kernel and f == frag]
     data[(kernel, "geomean", frag)] = geomean_all(points)
 
-kf = {}
-for (wkld, frag), point in control.items():
-    if frag not in kf:
-        kf[frag] = []
-    kf[frag].append(point)
-
-for frag, points in kf.items():
-    control[("geomean", frag)] = geomean_all(points)
-
 wklds.append("geomean")
-
-# Normalize against Linux 
-for k, point in data.items():
-    kernel, wkld, frag = k
-    point.normalize(control[(wkld, frag)])
-
-    if wkld == "geomean":
-        print(kernel, frag, wkld, point)
 
 wklds = sorted(list(set(wklds)), key = lambda w: WORKLOAD_ORDER.index(w))
 wklds = {w : i for i, w in enumerate(wklds)}
@@ -152,14 +153,23 @@ for i, (kernel, frag) in enumerate(series):
 
     ys = list(map(lambda d: data[d].median, ys))
 
+    #if frag:
+    #    ys = [0 for y in ys]
+
     plt.bar(xs, ys,
-            width=TOTALBARWIDTH / nseries, 
+            width=TOTALBARWIDTH / nseries,
             label="%s%s" % (kernel, ", fragmented" if frag else ""),
-            color="lightblue" if kernel == "CBMM" else "pink",
+            color=COLORS[kernel],
             hatch="///" if frag else None,
             edgecolor="black")
 
-plt.ylabel("Normalized Runtime")
+    too_tall = [(x, y) for (x, y) in zip(xs, ys) if y > YMAX]
+    for x, y in too_tall:
+        plt.text(x + 0.1, YMAX - 0.2, "%.1f" % y)
+
+
+plt.ylabel("Normalized\nRuntime")
+plt.ylim((0, YMAX))
 
 plt.xlim((0.5, len(wklds) - 0.5))
 ticklabels = sorted(wklds, key=wklds.get)
@@ -169,7 +179,10 @@ ticklabeltrans = transforms.ScaledTranslation(0.5, 0., fig.dpi_scale_trans)
 for label in plt.gca().xaxis.get_majorticklabels():
     label.set_transform(label.get_transform() + ticklabeltrans)
 
-plt.legend(bbox_to_anchor=(0.5, 1), loc="lower center", ncol=2)
+if environ.get("NOLEGEND") is None:
+    plt.legend(bbox_to_anchor=(0.5, 1), loc="lower center", ncol=2)
+
+plt.grid(True)
 
 plt.tight_layout()
 
