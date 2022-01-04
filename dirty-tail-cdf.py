@@ -25,6 +25,8 @@ FREQ = float(environ["FREQ"]) if "FREQ" in environ else None
 NINES = float(argv[1])
 NPLOTS = int(len(argv[2:]) / 102)
 
+plt.figure(figsize=FIGSIZE)
+
 #CYCLER = (cycler(color=['r', 'g', 'b', 'y', 'c', 'm', 'k']) + cycler(linestyle=['-', '--', ':', '-.']))
 colormap = plt.cm.nipy_spectral
 colors = [colormap(i) for i in np.linspace(0, 1, NPLOTS)]
@@ -88,8 +90,6 @@ class CloseToOne(mscale.ScaleBase):
 mscale.register_scale(CloseToOne)
 
 
-plt.figure(figsize=FIGSIZE)
-
 ys = [y for y in range(0, 101)] # 0 ..= 100
 ys = [y * NINES / 100. for y in ys] # 0 ..= nines
 ys = [100. - 10. ** (2 - y) for y in ys] # log space
@@ -102,7 +102,11 @@ for i in range(NPLOTS):
     xs = [float(x) for x in argv[2+i*102+1:2+(i+1)*102]]
     if FREQ is not None:
         xs = [x / FREQ for x in xs]
-    plt.plot(xs, ys, label=label, linestyle=next(styles))
+    ls = next(styles)
+    if label in []:
+        plt.plot(xs, ys, label=label, linewidth=0)
+    else:
+        plt.plot(xs, ys, label=label, linestyle=ls)
 
     s+=label
 

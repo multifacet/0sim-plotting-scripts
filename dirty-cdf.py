@@ -20,13 +20,13 @@ if len(argv[1:]) % 102 != 0:
 FREQ = float(environ["FREQ"]) if "FREQ" in environ else None
 NPLOTS = int(len(argv[1:]) / 102)
 
+plt.figure(figsize=(8,8))
+
 #CYCLER = (cycler(color=['r', 'g', 'b', 'y', 'c', 'm', 'k']) + cycler(linestyle=['-', '--', ':', '-.']))
 colormap = plt.cm.nipy_spectral
 colors = [colormap(i) for i in np.linspace(0, 1, NPLOTS)]
 styles = itertools.cycle(['-', '--', ':', '-.'])
 plt.gca().set_prop_cycle('color', colors)
-
-plt.figure(figsize=(8,8))
 
 for i in range(NPLOTS):
     label = argv[1+i*102]

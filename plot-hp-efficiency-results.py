@@ -22,7 +22,8 @@ INFILE=argv[1]
 
 TOTALBARWIDTH = 0.65
 
-WORKLOAD_ORDER=["mcf", "xz", "canneal", "thp-ubmk", "memcached", "mongodb", "mix"]
+#WORKLOAD_ORDER=["mcf", "xz", "canneal", "thp-ubmk", "memcached", "mongodb", "mix"]
+WORKLOAD_ORDER=["mcf", "xz", "canneal", "memcached", "mongodb", "mix"]
 
 control = {}
 data = {}
@@ -39,7 +40,12 @@ with open(INFILE, 'r') as f:
 
         wkld = row["workload"]
         kernel = row["kernel"]
-        frag = row["fragmentation"].lower() == "true"
+        frag = row["fragmentation"].lower() == "fragmented"
+
+        #if not frag:
+        #    continue
+        #else:
+        #    frag = False
 
         data[(kernel, wkld, frag)] = efficiency * 100.0
         series.append((kernel, frag))
@@ -75,6 +81,8 @@ for i, (kernel, frag) in enumerate(series):
     else:
         color = "lightyellow"
 
+    #if frag:
+    #    ys = [0 for y in ys]
 
     plt.bar(xs, ys,
             width=TOTALBARWIDTH / nseries, 
@@ -83,9 +91,10 @@ for i, (kernel, frag) in enumerate(series):
             hatch="///" if frag else None,
             edgecolor="black")
 
-plt.ylabel("% Backed by Huge Pages")
+plt.ylabel("% Backed by\nHuge Pages")
 
-plt.xlim((0.5, len(wklds) - 0.5))
+#plt.xlim((0.5, len(wklds) + 1 - 0.5))
+plt.xlim((0.5, len(wklds)  - 0.5))
 ticklabels = sorted(wklds, key=wklds.get)
 plt.xticks(np.arange(len(wklds)) - 0.5, ticklabels,
         ha="center", rotation=-45.)
@@ -93,7 +102,8 @@ ticklabeltrans = transforms.ScaledTranslation(0.5, 0., fig.dpi_scale_trans)
 for label in plt.gca().xaxis.get_majorticklabels():
     label.set_transform(label.get_transform() + ticklabeltrans)
 
-plt.legend(bbox_to_anchor=(0.5, 1), loc="lower center", ncol=2)
+if environ.get("NOLEGEND") is None:
+    plt.legend(bbox_to_anchor=(0.5, 1), loc="lower center", ncol=2)
 
 plt.grid()
 
