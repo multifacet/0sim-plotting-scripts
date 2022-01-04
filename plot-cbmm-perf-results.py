@@ -24,7 +24,8 @@ INFILE=argv[1]
 TOTALBARWIDTH = 0.65
 
 WORKLOAD_ORDER=["mcf", "xz", "canneal", "thp-ubmk", "memcached", "mongodb", "mix", "geomean"]
-COLORS = {"Linux": "lightyellow", "CBMM": "lightblue", "HawkEye": "pink", "Linux4.3": "black"}
+COLORS = {"Linux": "lightyellow", "CBMM": "lightblue", "HawkEye": "pink", "Linux4.3": "black",
+    "CBMM With Only Huge Pages": "pink", "CBMM With Only Huge Pages and Async Prezeroing": "lightgreen"}
 
 YMAX = 2.0
 
