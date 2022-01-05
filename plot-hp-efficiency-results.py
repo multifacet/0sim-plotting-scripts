@@ -23,13 +23,14 @@ INFILE=argv[1]
 TOTALBARWIDTH = 0.65
 
 #WORKLOAD_ORDER=["mcf", "xz", "canneal", "thp-ubmk", "memcached", "mongodb", "mix"]
-WORKLOAD_ORDER=["mcf", "xz", "canneal", "memcached", "mongodb", "mix"]
-SERIES = {"Linux": 0, "Linux4.3": 1, "HawkEye": 2, "CBMM": 3}
+#WORKLOAD_ORDER=["mcf", "xz", "canneal", "memcached", "mongodb", "mix"]
+KERNEL_ORDER=["Linux", "HawkEye", "CBMM"]
 
 control = {}
 data = {}
 
 wklds = []
+kernels = []
 series = []
 
 # Read data
@@ -49,45 +50,51 @@ with open(INFILE, 'r') as f:
         #    frag = False
 
         data[(kernel, wkld, frag)] = efficiency * 100.0
-        series.append((kernel, frag))
+        series.append((wkld, frag))
 
-        wklds.append(wkld)
+        kernels.append(kernel)
 
 
-wklds = sorted(list(set(wklds)), key = lambda w: WORKLOAD_ORDER.index(w))
-wklds = {w : i for i, w in enumerate(wklds)}
-series = list(sorted(set(series), key=lambda s: (s[1], SERIES[s[0]])))
+kernels = sorted(list(set(kernels)), key = lambda k: KERNEL_ORDER.index(k))
+kernels = {k : i for i, k in enumerate(kernels)}
+series = list(sorted(set(series), key=lambda s: (s[1], s[0])))
 
 nseries = len(series)
 barwidth = TOTALBARWIDTH / nseries
 
 fig = plt.figure(figsize=FIGSIZE)
 
-print(wklds)
+print(kernels)
 print(series)
 
-for i, (kernel, frag) in enumerate(series):
-    ys = list(filter(lambda d: d[0] == kernel and d[2] == frag, data))
+for i, (wkld, frag) in enumerate(series):
+    ys = list(filter(lambda d: d[1] == wkld and d[2] == frag, data))
 
-    xs = np.array(list(map(lambda d: wklds[d[1]], ys))) \
+    xs = np.array(list(map(lambda d: kernels[d[0]], ys))) \
             - TOTALBARWIDTH / 2 + i * TOTALBARWIDTH / nseries \
             + TOTALBARWIDTH / nseries / 2
 
     ys = list(map(lambda d: data[d], ys))
 
-    if kernel == "CBMM":
-        color = "lightblue"
-    elif kernel == "HawkEye":
-        color = "pink"
+    if wkld == "canneal":
+        color = "blue"
+    elif wkld == "mcf":
+        color = "orange"
+    elif wkld == "memcached":
+        color = "green"
+    elif wkld == "mix":
+        color = "red"
+    elif wkld == "mongodb":
+        color = "purple"
     else:
-        color = "lightyellow"
+        color = "brown"
 
     #if frag:
     #    ys = [0 for y in ys]
 
     plt.bar(xs, ys,
             width=TOTALBARWIDTH / nseries, 
-            label="%s%s" % (kernel, ", fragmented" if frag else ""),
+            label="%s%s" % (wkld, ", fragmented" if frag else ""),
             color=color,
             hatch="///" if frag else None,
             edgecolor="black")
@@ -95,11 +102,11 @@ for i, (kernel, frag) in enumerate(series):
 plt.ylabel("% Backed by Huge Pages")
 
 #plt.xlim((0.5, len(wklds) + 1 - 0.5))
-plt.xlim((0.5, len(wklds)  - 0.5))
-ticklabels = sorted(wklds, key=wklds.get)
-plt.xticks(np.arange(len(wklds)) - 0.5, ticklabels,
-        ha="center", rotation=45.)
-ticklabeltrans = transforms.ScaledTranslation(0.2, 0., fig.dpi_scale_trans)
+plt.xlim((0.5, len(kernels)  - 0.5))
+ticklabels = sorted(kernels, key=kernels.get)
+plt.xticks(np.arange(len(kernels)) - 0.5, ticklabels,
+        ha="center", rotation=-45.)
+ticklabeltrans = transforms.ScaledTranslation(0.5, 0., fig.dpi_scale_trans)
 for label in plt.gca().xaxis.get_majorticklabels():
     label.set_transform(label.get_transform() + ticklabeltrans)
 
