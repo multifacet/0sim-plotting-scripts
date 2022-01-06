@@ -52,6 +52,7 @@ with open(INFILE, 'r') as f:
         data[(kernel, wkld, frag)] = efficiency * 100.0
         series.append((wkld, frag))
 
+        wklds.append(wkld)
         kernels.append(kernel)
 
 
@@ -59,10 +60,10 @@ kernels = sorted(list(set(kernels)), key = lambda k: KERNEL_ORDER.index(k))
 kernels = {k : i for i, k in enumerate(kernels)}
 series = list(sorted(set(series), key=lambda s: (s[1], s[0])))
 
-nseries = len(series)
+nseries = len(series) / 2
 barwidth = TOTALBARWIDTH / nseries
 
-fig = plt.figure(figsize=FIGSIZE)
+fig, axs = plt.subplots(1, 2, figsize=FIGSIZE)
 
 print(kernels)
 print(series)
@@ -70,8 +71,12 @@ print(series)
 for i, (wkld, frag) in enumerate(series):
     ys = list(filter(lambda d: d[1] == wkld and d[2] == frag, data))
 
+    if frag:
+        location = i - nseries
+    else:
+        location = i
     xs = np.array(list(map(lambda d: kernels[d[0]], ys))) \
-            - TOTALBARWIDTH / 2 + i * TOTALBARWIDTH / nseries \
+            - TOTALBARWIDTH / 2 + location * TOTALBARWIDTH / nseries \
             + TOTALBARWIDTH / nseries / 2
 
     ys = list(map(lambda d: data[d], ys))
@@ -89,33 +94,33 @@ for i, (wkld, frag) in enumerate(series):
     else:
         color = "brown"
 
-    #if frag:
-    #    ys = [0 for y in ys]
+    if frag:
+        axis = 1
+    else:
+        axis = 0
 
-    plt.bar(xs, ys,
-            width=TOTALBARWIDTH / nseries, 
-            label="%s%s" % (wkld, ", fragmented" if frag else ""),
+    axs[axis].bar(xs, ys,
+            width=TOTALBARWIDTH / nseries,
+            label="%s" % (wkld),
             color=color,
-            hatch="///" if frag else None,
             edgecolor="black")
 
-plt.ylabel("% Backed by\nHuge Pages")
+fig.supylabel("% Backed by Huge Pages")
 
-#plt.xlim((0.5, len(wklds) + 1 - 0.5))
-plt.xlim((0.5, len(kernels)  - 0.5))
-ticklabels = sorted(kernels, key=kernels.get)
-plt.xticks(np.arange(len(kernels)) - 0.5, ticklabels,
-        ha="center", rotation=-45.)
-ticklabeltrans = transforms.ScaledTranslation(0.5, 0., fig.dpi_scale_trans)
-for label in plt.gca().xaxis.get_majorticklabels():
-    label.set_transform(label.get_transform() + ticklabeltrans)
+axs[0].set_title("Unfragmented")
+axs[1].set_title("Fragmented")
+for ax in axs:
+    ticklabels = sorted(kernels, key=kernels.get)
+    ax.set_xticks(range(len(kernels)))
+    ax.set_xticklabels(ticklabels)
+    ax.grid()
+
+    box = ax.get_position()
+    ax.set_position([box.x0, box.y0, box.width, box.height * 0.85])
 
 if environ.get("NOLEGEND") is None:
-    plt.legend(bbox_to_anchor=(0.5, 1), loc="lower center", ncol=2)
-
-plt.grid()
-
-plt.tight_layout()
+    handles, labels = axs[1].get_legend_handles_labels()
+    fig.legend(handles, labels, loc="upper center", ncol=3)
 
 plt.savefig("/tmp/%s.%s" % (OUTFNAME, "pdf" if IS_PDF else "png"), bbox_inches="tight")
 plt.show()
