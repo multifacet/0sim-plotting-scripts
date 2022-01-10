@@ -26,6 +26,14 @@ NINES = float(argv[1])
 NPLOTS = int(len(argv[2:]) / 102)
 SCALE = [float(x) for x in environ["SCALE"].split()]
 
+def style(label):
+    COLORS = {"Linux": "#c9bc00", "CBMM": "#3977a3", "HawkEye": "#d13838", "Linux4.3": "black"}
+
+    linesty = "--" if "frag" in label else "solid"
+    color = COLORS[label.split(",")[0]]
+
+    return color,linesty
+
 plt.figure(figsize=FIGSIZE)
 
 #CYCLER = (cycler(color=['r', 'g', 'b', 'y', 'c', 'm', 'k']) + cycler(linestyle=['-', '--', ':', '-.']))
@@ -105,12 +113,13 @@ for (i, factor) in zip(range(NPLOTS), SCALE):
     xs = [float(x) for x in argv[2+i*102+1:2+(i+1)*102]]
     if FREQ is not None:
         xs = [x / FREQ for x in xs]
-    ls = next(styles)
+    #ls = next(styles)
+    c,ls = style(label)
     scaledys = [y / factor for y in ys]
     if label in []:
         plt.plot(xs, scaledys, label=label, linewidth=0)
     else:
-        plt.plot(xs, scaledys, label=label, linestyle=ls)
+        plt.plot(xs, scaledys, label=label, color=c, linestyle=ls, linewidth=2)
 
     s+=label
 
@@ -152,7 +161,7 @@ plt.yticks(yt, map(ms_to_label, yt))
 plt.grid(True)
 
 if environ.get("NOLEGEND") is None:
-    plt.legend(bbox_to_anchor=(0, 1.05), loc='lower left')
+    plt.legend(bbox_to_anchor=(0, 1.05), loc='lower left', ncol=3)
 #plt.legend(bbox_to_anchor=(1.05, 1.0), loc='upper left')
 #plt.legend(loc='lower right')
 

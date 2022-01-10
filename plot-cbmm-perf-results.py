@@ -25,7 +25,9 @@ TOTALBARWIDTH = 0.65
 
 WORKLOAD_ORDER=["mcf", "xz", "canneal", "thp-ubmk", "memcached", "mongodb", "mix", "geomean"]
 COLORS = {"Linux": "lightyellow", "CBMM": "lightblue", "HawkEye": "pink", "Linux4.3": "black",
-    "CBMM With Only Huge Pages": "pink", "CBMM With Only Huge Pages and Async Prezeroing": "lightgreen"}
+    "CBMM With Only Huge Pages": "pink", "CBMM With Only Huge Pages and Async Prezeroing": "lightgreen",
+    "CBMM-tuned": "lightgreen"}
+SERIES = {"Linux": 0, "Linux4.3": 1, "HawkEye": 2, "CBMM": 3, "CBMM-tuned": 4}
 
 YMAX = 2.0
 
@@ -124,13 +126,14 @@ def geomean_all(points):
 
 for kernel, frag in series:
     points = [p for (k, w, f), p in data.items() if k == kernel and f == frag]
-    data[(kernel, "geomean", frag)] = geomean_all(points)
+    if kernel != "CBMM-tuned":
+        data[(kernel, "geomean", frag)] = geomean_all(points)
 
 wklds.append("geomean")
 
 wklds = sorted(list(set(wklds)), key = lambda w: WORKLOAD_ORDER.index(w))
 wklds = {w : i for i, w in enumerate(wklds)}
-series = list(sorted(set(series), key=lambda s: (s[1], s[0])))
+series = list(sorted(set(series), key=lambda s: (s[1], SERIES[s[0]])))
 
 nseries = len(series)
 barwidth = TOTALBARWIDTH / nseries
@@ -169,14 +172,14 @@ for i, (kernel, frag) in enumerate(series):
         plt.text(x + 0.1, YMAX - 0.2, "%.1f" % y)
 
 
-plt.ylabel("Normalized\nRuntime")
+plt.ylabel("Normalized Runtime")
 plt.ylim((0, YMAX))
 
 plt.xlim((0.5, len(wklds) - 0.5))
 ticklabels = sorted(wklds, key=wklds.get)
 plt.xticks(np.arange(len(wklds)) - 0.5, ticklabels,
-        ha="center", rotation=-45.)
-ticklabeltrans = transforms.ScaledTranslation(0.5, 0., fig.dpi_scale_trans)
+        ha="center", rotation=45.)
+ticklabeltrans = transforms.ScaledTranslation(0.2, 0., fig.dpi_scale_trans)
 for label in plt.gca().xaxis.get_majorticklabels():
     label.set_transform(label.get_transform() + ticklabeltrans)
 

@@ -24,6 +24,7 @@ TOTALBARWIDTH = 0.65
 
 #WORKLOAD_ORDER=["mcf", "xz", "canneal", "thp-ubmk", "memcached", "mongodb", "mix"]
 WORKLOAD_ORDER=["mcf", "xz", "canneal", "memcached", "mongodb", "mix"]
+SERIES = {"Linux": 0, "Linux4.3": 1, "HawkEye": 2, "CBMM": 3}
 
 control = {}
 data = {}
@@ -55,7 +56,7 @@ with open(INFILE, 'r') as f:
 
 wklds = sorted(list(set(wklds)), key = lambda w: WORKLOAD_ORDER.index(w))
 wklds = {w : i for i, w in enumerate(wklds)}
-series = list(sorted(set(series), key=lambda s: (s[1], s[0])))
+series = list(sorted(set(series), key=lambda s: (s[1], SERIES[s[0]])))
 
 nseries = len(series)
 barwidth = TOTALBARWIDTH / nseries
@@ -91,14 +92,14 @@ for i, (kernel, frag) in enumerate(series):
             hatch="///" if frag else None,
             edgecolor="black")
 
-plt.ylabel("% Backed by\nHuge Pages")
+plt.ylabel("% Backed by Huge Pages")
 
 #plt.xlim((0.5, len(wklds) + 1 - 0.5))
 plt.xlim((0.5, len(wklds)  - 0.5))
 ticklabels = sorted(wklds, key=wklds.get)
 plt.xticks(np.arange(len(wklds)) - 0.5, ticklabels,
-        ha="center", rotation=-45.)
-ticklabeltrans = transforms.ScaledTranslation(0.5, 0., fig.dpi_scale_trans)
+        ha="center", rotation=45.)
+ticklabeltrans = transforms.ScaledTranslation(0.2, 0., fig.dpi_scale_trans)
 for label in plt.gca().xaxis.get_majorticklabels():
     label.set_transform(label.get_transform() + ticklabeltrans)
 
