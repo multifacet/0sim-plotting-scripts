@@ -82,17 +82,18 @@ for i, (wkld, frag) in enumerate(series):
     ys = list(map(lambda d: data[d], ys))
 
     if wkld == "canneal":
-        color = "blue"
+        color = "lightblue"
     elif wkld == "mcf":
-        color = "orange"
+        color = "goldenrod"
     elif wkld == "memcached":
-        color = "green"
+        color = "lightgreen"
     elif wkld == "mix":
-        color = "red"
+        color = "pink"
+        wkld = "dc-mix"
     elif wkld == "mongodb":
-        color = "purple"
+        color = "violet"
     else:
-        color = "brown"
+        color = "chocolate"
 
     if frag:
         axis = 1
@@ -105,18 +106,19 @@ for i, (wkld, frag) in enumerate(series):
             color=color,
             edgecolor="black")
 
-fig.supylabel("% Backed by Huge Pages")
+fig.supylabel("% Backed by Huge Pages", fontsize=9, y=0.4)
 
-axs[0].set_title("Unfragmented")
-axs[1].set_title("Fragmented")
+axs[0].set_title("Unfragmented", fontsize=10)
+axs[1].set_title("Fragmented", fontsize=10)
 for ax in axs:
     ticklabels = sorted(kernels, key=kernels.get)
     ax.set_xticks(range(len(kernels)))
     ax.set_xticklabels(ticklabels)
+    ax.tick_params(axis='x', labelrotation = 45)
     ax.grid()
 
     box = ax.get_position()
-    ax.set_position([box.x0, box.y0, box.width, box.height * 0.85])
+    ax.set_position([box.x0, box.y0, box.width, box.height * 0.65])
 
 if environ.get("NOLEGEND") is None:
     handles, labels = axs[1].get_legend_handles_labels()
