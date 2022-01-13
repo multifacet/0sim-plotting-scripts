@@ -110,6 +110,8 @@ fig.supylabel("% Backed by Huge Pages", fontsize=9, y=0.4)
 
 axs[0].set_title("Unfragmented", fontsize=10)
 axs[1].set_title("Fragmented", fontsize=10)
+axs[1].set_yticklabels([])
+plt.subplots_adjust(wspace=0, hspace=0)
 for ax in axs:
     ticklabels = sorted(kernels, key=kernels.get)
     ax.set_xticks(range(len(kernels)))
