@@ -126,8 +126,11 @@ def geomean_all(points):
 
 for kernel, frag in series:
     points = [p for (k, w, f), p in data.items() if k == kernel and f == frag]
-    if kernel != "CBMM-tuned":
-        data[(kernel, "geomean", frag)] = geomean_all(points)
+    if kernel == "CBMM-tuned":
+        for w in set(wklds):
+            if ("CBMM-tuned", w, frag) not in data:
+                points.append(data["CBMM", w, frag])
+    data[(kernel, "geomean", frag)] = geomean_all(points)
 
 wklds.append("geomean")
 
