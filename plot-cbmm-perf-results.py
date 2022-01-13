@@ -27,7 +27,7 @@ TOTALBARWIDTH = 0.65
 WORKLOAD_ORDER=["mcf", "xz", "canneal", "thp-ubmk", "memcached", "mongodb", "dc-mix", "geomean"]
 COLORS = {"Linux": "lightyellow", "CBMM": "lightblue", "HawkEye": "pink", "Linux4.3": "black",
     "CBMM With Only Huge Pages": "pink", "CBMM With Only Huge Pages and Async Prezeroing": "lightgreen",
-    "CBMM-tuned": "lightgreen"}
+    "CBMM-tuned": "orange"}
 SERIES = {"Linux": 0, "Linux4.3": 1, "HawkEye": 2, "CBMM": 3, "CBMM-tuned": 4}
 
 YMAX = 2.0
@@ -171,7 +171,7 @@ for i, (kernel, frag) in enumerate(series):
             label="%s%s" % (kernel, ", fragmented" if frag else ""),
             color=COLORS[kernel],
             hatch="///" if frag else None,
-            edgecolor="black")
+            edgecolor="black", linewidth=.5)
 
     too_tall = [(x, y) for (x, y) in zip(xs, ys) if y > YMAX]
     for x, y in too_tall:
