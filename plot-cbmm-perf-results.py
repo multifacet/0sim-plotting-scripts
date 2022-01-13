@@ -3,6 +3,7 @@
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import matplotlib.transforms as transforms
+from matplotlib.patches import Patch
 import numpy as np
 
 import re
@@ -189,7 +190,16 @@ for label in plt.gca().xaxis.get_majorticklabels():
     label.set_transform(label.get_transform() + ticklabeltrans)
 
 if environ.get("NOLEGEND") is None:
-    plt.legend(bbox_to_anchor=(0.5, 1), loc="lower center", ncol=2)
+    legend_elements = []
+    for kernel, frag in series:
+        if not frag:
+            legend_elements.append(Patch(facecolor=COLORS[kernel], edgecolor="k", label=kernel))
+
+    legend_elements.append(Patch(facecolor="white", edgecolor="k", hatch="///", label="Fragmented"))
+
+    plt.legend(handles=legend_elements, bbox_to_anchor=(0.5, 1), loc="lower center", ncol=3)
+    #plt.legend(bbox_to_anchor=(0.5, 1), loc="lower center", ncol=2)
+
 
 plt.grid(True)
 
