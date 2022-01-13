@@ -151,7 +151,7 @@ def ms_to_label(ms):
 
     return "%.1f %s" % (ms, text)
 
-plt.ylabel("Time between events")
+plt.ylabel("Avg time between events")
 #plt.yscale("close_to_one")
 plt.yscale("log")
 plt.ylim((10**-1, 10**6))

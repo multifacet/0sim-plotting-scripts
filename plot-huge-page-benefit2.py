@@ -78,11 +78,11 @@ ax2.plot(xs, [0]*len(xs), color="black", lw=0.5, ls=":")
 #ax1.plot(xs, [100]*len(xs), color="black", lw=0.5, ls=":")
 #ax2.plot(xs, [100]*len(xs), color="black", lw=0.5, ls=":")
 
-ax1.plot(normalized_runtime, color=(179/255., 167/255., 39/255.), label="Normalized Runtime")
+ax1.plot(normalized_runtime, color=(179/255., 167/255., 39/255.), label="Runtime")
 ax1.set_ylabel("Norm.\nRuntime")
 
-ax2.plot(store_walk_cycles, color="red", label = "Normalized Store Page Walk Cycles")
-ax2.plot(load_walk_cycles, color="blue", label = "Normalized Load Page Walk Cycles")
+ax2.plot(store_walk_cycles, color="red", label = "Store Walk Cycles")
+ax2.plot(load_walk_cycles, color="blue", label = "Load Walk Cycles")
 ax2.set_ylabel("Norm. Page\nWalk Cycles")
 
 ax1.set_xlim((0 - XBUFFER, len(xs)+XBUFFER))
