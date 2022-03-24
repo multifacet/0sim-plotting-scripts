@@ -27,7 +27,7 @@ NPLOTS = int(len(argv[2:]) / 102)
 SCALE = [float(x) for x in environ["SCALE"].split()]
 
 def style(label):
-    COLORS = {"Linux": "#c9bc00", "CBMM": "#3977a3", "HawkEye": "#d13838", "Linux4.3": "black"}
+    COLORS = {"Linux": "#c9bc00", "CBMM": "#3977a3", "HawkEye": "#d13838", "Linux4.3": "black", "CBMM-tuned": "green"}
 
     linesty = "--" if "frag" in label else "solid"
     color = COLORS[label.split(",")[0]]

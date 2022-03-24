@@ -148,6 +148,8 @@ fig = plt.figure(figsize=FIGSIZE)
 
 print(wklds)
 print(series)
+for k,v in data.items():
+    print(k,v)
 
 # horizontal dotted line at 1
 horizontalxs = np.arange(len(wklds) + 2 * TOTALBARWIDTH) - TOTALBARWIDTH
