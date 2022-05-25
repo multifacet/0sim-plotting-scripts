@@ -27,7 +27,7 @@ TOTALBARWIDTH = 0.65
 WORKLOAD_ORDER=["mcf", "xz", "canneal", "thp-ubmk", "memcached", "mongodb", "dc-mix", "geomean"]
 COLORS = {"Linux": "lightyellow", "CBMM": "lightblue", "HawkEye": "pink", "Linux4.3": "black",
     "CBMM With Only Huge Pages": "pink", "CBMM With Only Huge Pages and Async Prezeroing": "lightgreen",
-    "CBMM-tuned": "orange", "CBMM App General": "pink", "CBMM General": "lightgreen"}
+    "CBMM-tuned": "slateblue", "CBMM App General": "pink", "CBMM General": "lightgreen"}
 SERIES = {"Linux": 0, "Linux4.3": 1, "HawkEye": 2, "CBMM": 3, "CBMM-tuned": 4,
     "CBMM With Only Huge Pages and Async Prezeroing": 5, "CBMM With Only Huge Pages": 6,
     "CBMM App General": 7, "CBMM General": 8}
