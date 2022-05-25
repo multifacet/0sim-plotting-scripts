@@ -154,7 +154,7 @@ def ms_to_label(ms):
 plt.ylabel("Avg time between events")
 #plt.yscale("close_to_one")
 plt.yscale("log")
-plt.ylim((10**-1, 10**6))
+plt.ylim((10**-1, 10**(NINES-5)))
 yt, oldlab = plt.yticks()
 plt.yticks(yt, map(ms_to_label, yt))
 

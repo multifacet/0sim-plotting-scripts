@@ -8,6 +8,7 @@ MARKERS = ['.', '>', '<', '*', 'v', '^', 'D', 'X', 'P', 'p', 's']
 LINE_STYLES=[":","-.","--","-"]
 
 IS_PDF = False
+NOSHOW = False
 
 SLIDES_FONT_SIZE = 18
 
@@ -39,6 +40,9 @@ if os.environ.get("HIDDEN") is not None:
 
 if os.environ.get("SMALL_PLOT") is not None:
     SMALL_PLOT = True
+
+if os.environ.get("NOSHOW") is not None:
+    NOSHOW = True
 
 def _figsize():
     if os.environ.get("SMALL_PLOT") is not None:
@@ -94,3 +98,16 @@ FIGSIZE=_figsize()
 
 # Use type1 fonts
 SetPlotRC()
+
+"""
+Given the output of `hash`, return a (r, g, b) tuple usable with matplotlib.
+"""
+def hash_to_color(h, alpha = 1):
+    # Get a 3-byte number. Each byte will be a color component.
+    mod = h % (1<<24)
+
+    r = (mod >> 16) & 0xFF
+    g = (mod >>  8) & 0xFF
+    b =  mod        & 0xFF
+
+    return (r/256., g/256., b/256., alpha)

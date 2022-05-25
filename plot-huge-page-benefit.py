@@ -53,9 +53,17 @@ def moving_average(x, w):
 #store_walk_cycles = moving_average([100 - (control[1] / control[2] - d[1] / d[2])*100. for d in data], MOVING_AVERAGE_WINDOW)
 #load_walk_cycles = moving_average([100 - (control[0] / control[2] - d[0] / d[2])*100. for d in data], MOVING_AVERAGE_WINDOW)
 
-normalized_runtime = moving_average([d[3] / control[3] * 100. - 100. for d in data], MOVING_AVERAGE_WINDOW)
-store_walk_cycles = moving_average([(d[1] / d[2] - control[1] / control[2])*100. for d in data], MOVING_AVERAGE_WINDOW)
-load_walk_cycles = moving_average([(d[0] / d[2] - control[0] / control[2])*100. for d in data], MOVING_AVERAGE_WINDOW)
+#normalized_runtime = moving_average([d[3] / control[3] * 100. - 100. for d in data], MOVING_AVERAGE_WINDOW)
+#store_walk_cycles = moving_average([(d[1] / d[2] - control[1] / control[2])*100. for d in data], MOVING_AVERAGE_WINDOW)
+#load_walk_cycles = moving_average([(d[0] / d[2] - control[0] / control[2])*100. for d in data], MOVING_AVERAGE_WINDOW)
+
+#normalized_runtime = moving_average([d[3] / control[3] * 100. for d in data], MOVING_AVERAGE_WINDOW)
+#store_walk_cycles = moving_average([(d[1] / d[2] - control[1] / control[2])*100. + 100. for d in data], MOVING_AVERAGE_WINDOW)
+#load_walk_cycles = moving_average([(d[0] / d[2] - control[0] / control[2])*100. + 100. for d in data], MOVING_AVERAGE_WINDOW)
+
+normalized_runtime = moving_average([d[3] / control[3] for d in data], MOVING_AVERAGE_WINDOW)
+store_walk_cycles = moving_average([(d[1] / d[2] - control[1] / control[2]) + 1. for d in data], MOVING_AVERAGE_WINDOW)
+load_walk_cycles = moving_average([(d[0] / d[2] - control[0] / control[2]) + 1. for d in data], MOVING_AVERAGE_WINDOW)
 
 #store_walk_cycles = moving_average([((d[1] / d[2]) / (control[1] / control[2]))*100. for d in data], MOVING_AVERAGE_WINDOW)
 #load_walk_cycles = moving_average([((d[0] / d[2]) / (control[0] / control[2]))*100. for d in data], MOVING_AVERAGE_WINDOW)
@@ -73,8 +81,10 @@ gs.update(wspace=0.025, hspace=0.05)
 ax1 = plt.subplot(gs[0])
 ax2 = plt.subplot(gs[1])
 
-ax1.plot(xs, [0]*len(xs), color="black", lw=0.5, ls=":")
-ax2.plot(xs, [0]*len(xs), color="black", lw=0.5, ls=":")
+#ax1.plot(xs, [0]*len(xs), color="black", lw=0.5, ls=":")
+#ax2.plot(xs, [0]*len(xs), color="black", lw=0.5, ls=":")
+ax1.plot(xs, [1]*len(xs), color="black", lw=0.5, ls=":")
+ax2.plot(xs, [1]*len(xs), color="black", lw=0.5, ls=":")
 #ax1.plot(xs, [100]*len(xs), color="black", lw=0.5, ls=":")
 #ax2.plot(xs, [100]*len(xs), color="black", lw=0.5, ls=":")
 
