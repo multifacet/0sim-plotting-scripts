@@ -117,10 +117,14 @@ for ax in axs:
     ax.set_xticks(range(len(kernels)))
     ax.set_xticklabels(ticklabels)
     ax.tick_params(axis='x', labelrotation = 45)
-    ax.grid()
+    ax.grid(axis = "y")
 
     box = ax.get_position()
     ax.set_position([box.x0, box.y0, box.width, box.height * 0.65])
+
+# Hacky seperator line between the plots
+line = plt.Line2D((mid, mid), (-0.1, 0.7), color="k", linewidth="2")
+fig.add_artist(line)
 
 if environ.get("NOLEGEND") is None:
     handles, labels = axs[1].get_legend_handles_labels()
