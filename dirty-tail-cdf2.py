@@ -15,7 +15,7 @@ from cycler import cycler
 from sys import argv, exit
 from os import environ
 
-from paperstyle import FIGSIZE, IS_PDF, OUTFNAME
+from paperstyle import FIGSIZE, IS_PDF, OUTFNAME, NOSHOW
 
 USAGE_STR = "[FREQ=freq_mhz] ./script <nines> <label> <P0> <P1> ... <P100> <label> <P0> <P1> ... <P100> ..."
 if len(argv[2:]) % 102 != 0:
@@ -27,7 +27,15 @@ NPLOTS = int(len(argv[2:]) / 102)
 SCALE = [float(x) for x in environ["SCALE"].split()]
 
 def style(label):
-    COLORS = {"Linux": "#c9bc00", "CBMM": "#3977a3", "HawkEye": "#d13838", "Linux4.3": "black", "CBMM-tuned": "green"}
+    COLORS = {
+            "Linux": "#c9bc00",
+            "CBMM": "#3977a3",
+            "HawkEye": "#d13838",
+            "CBMM-perapp": "#d13838",
+            "Linux4.3": "black",
+            "CBMM-tuned": "green",
+            "CBMM-shared": "black"
+            }
 
     linesty = "--" if "frag" in label else "solid"
     color = COLORS[label.split(",")[0]]
@@ -168,4 +176,6 @@ if environ.get("NOLEGEND") is None:
 plt.tight_layout()
 
 plt.savefig("/tmp/%s.%s" % (OUTFNAME, ("pdf" if IS_PDF else "png")), bbox_inches="tight")
-#plt.show()
+
+if not NOSHOW:
+    plt.show()

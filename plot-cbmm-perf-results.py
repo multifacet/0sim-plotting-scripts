@@ -18,7 +18,7 @@ from textwrap import fill
 from sys import argv, exit
 from os import environ
 
-from paperstyle import FIGSIZE, IS_PDF, OUTFNAME, SMALL_PLOT
+from paperstyle import FIGSIZE, IS_PDF, OUTFNAME
 
 INFILE=argv[1]
 
