@@ -63,6 +63,8 @@ def _figsize():
         return (8, 5)
     elif os.environ.get("SHORT_PLOT") is not None:
         return (5, 2.0)
+    elif os.environ.get("SHORT_PLOT2") is not None:
+        return (5, 3.0)
     elif WIDE_PLOT:
         return (8, 3)
     elif BIG_PLOT:
