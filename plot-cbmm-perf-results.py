@@ -26,10 +26,10 @@ TOTALBARWIDTH = 0.65
 
 WORKLOAD_ORDER=["mcf", "xz", "canneal", "thp-ubmk", "memcached", "mongodb", "dc-mix", "geomean"]
 COLORS = {"Linux": "lightyellow", "CBMM": "lightblue", "HawkEye": "pink", "Linux4.3": "black",
-    "CBMM With Only Huge Pages": "pink", "CBMM With Only Huge Pages and Async Prezeroing": "lightgreen",
+    "CBMM With Only Huge Pages": "pink", "CBMM-huge": "pink", "CBMM With Only Huge Pages and Async Prezeroing": "lightgreen", "CBMM-async": "lightgreen",
     "CBMM-tuned": "slateblue", "CBMM App General": "pink", "CBMM-perapp": "pink", "CBMM General": "lightgreen", "CBMM-shared": "lightgreen"}
 SERIES = {"Linux": 0, "Linux4.3": 1, "HawkEye": 2, "CBMM": 3, "CBMM-tuned": 4,
-    "CBMM With Only Huge Pages and Async Prezeroing": 5, "CBMM With Only Huge Pages": 6,
+    "CBMM With Only Huge Pages and Async Prezeroing": 5, "CBMM-async": 5, "CBMM With Only Huge Pages": 6, "CBMM-huge": 6,
     "CBMM App General": 7, "CBMM-perapp": 7, "CBMM General": 8, "CBMM-shared": 8}
 
 YMAX = 2.0
