@@ -103,9 +103,9 @@ ax2.ticklabel_format(useOffset=False, style='plain')
 ax1.yaxis.set_label_position("right")
 ax2.yaxis.set_label_position("right")
 
-#plt.figlegend()
+plt.figlegend(ncol=3)
 
 plt.tight_layout()
 
 plt.savefig("/tmp/%s.%s" % (OUTFNAME, "pdf" if IS_PDF else "png"), bbox_inches="tight")
-#plt.show()
+plt.show()

@@ -4,7 +4,7 @@ import sys
 import subprocess
 import re
 import numpy as np
-from os import path
+from os import path, environ
 
 COUNT = len(sys.argv[1:]) // 7
 
@@ -103,12 +103,10 @@ print(scales)
 
 #OUTFNAME=tails-$WK PDF=1 SMALL_PLOT=1 NOLEGEND=1 FREQ=2600 SCALE="$UF_LINUX_SCALE $UF_CBMM_SCALE $UF_HAWKEYE_SCALE $FR_LINUX_SCALE $FR_CBMM_SCALE $FR_HAWKEYE_SCALE" /p/multifacet/users/markm/plotting/dirty-tail-cdf2.py 10 $(cat $OUT)
 
-subprocess.run(["/p/multifacet/users/markm/plotting/dirty-tail-cdf2.py", "10"] + data,
-        env={
-            "OUTFNAME": "tails",
-            "PDF": "1",
-            "BIG_PLOT": "1",
-            "FREQ": "2600",
-            "SCALE": " ".join(scales),
-            "DISPLAY": ":1"
-            })
+env = {}
+env.update(environ)
+env["FREQ"] = "2600"
+env["SCALE"] = " ".join(scales)
+env["DISPLAY"] = ":1"
+
+subprocess.run(["/p/multifacet/users/markm/plotting/dirty-tail-cdf2.py", "10"] + data, env=env)

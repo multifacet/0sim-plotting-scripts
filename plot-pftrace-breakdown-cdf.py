@@ -13,7 +13,7 @@ from textwrap import fill
 from sys import argv, exit
 from os import environ
 
-from paperstyle import FIGSIZE, IS_PDF, OUTFNAME, SMALL_PLOT
+from paperstyle import FIGSIZE, IS_PDF, OUTFNAME, SMALL_PLOT, NOSHOW
 
 USAGE_STR = """
 [FREQ=freq_mhz] ./script <stylesfile> <label> <P0> <P1> ... <P100> <label> <P0> <P1> ... <P100> ...
@@ -115,4 +115,5 @@ else:
 
 plt.savefig("/tmp/%s.%s" % (OUTFNAME, ("pdf" if IS_PDF else "png")), bbox_inches="tight")
 #plt.savefig("/tmp/%s.%s" % (OUTFNAME, ("pdf" if IS_PDF else "png")))
-plt.show()
+if not NOSHOW:
+    plt.show()

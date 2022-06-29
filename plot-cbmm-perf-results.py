@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import matplotlib.transforms as transforms
 from matplotlib.patches import Patch
+from matplotlib.ticker import FormatStrFormatter
 import numpy as np
 
 import re
@@ -18,7 +19,7 @@ from textwrap import fill
 from sys import argv, exit
 from os import environ
 
-from paperstyle import FIGSIZE, IS_PDF, OUTFNAME
+from paperstyle import FIGSIZE, IS_PDF, OUTFNAME, NOSHOW
 
 INFILE=argv[1]
 
@@ -184,6 +185,7 @@ for i, (kernel, frag) in enumerate(series):
 
 plt.ylabel("Normalized Runtime")
 plt.ylim((0, YMAX))
+plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%0.1f'))
 
 plt.xlim((0.5, len(wklds) - 0.5))
 ticklabels = sorted(wklds, key=wklds.get)
@@ -205,10 +207,12 @@ if environ.get("NOLEGEND") is None:
     #plt.legend(bbox_to_anchor=(0.5, 1), loc="lower center", ncol=2)
 
 
-plt.grid(True)
+plt.grid(False)
+plt.gca().xaxis.grid(True)
 
 plt.tight_layout()
 
 plt.savefig("/tmp/%s.%s" % (OUTFNAME, "pdf" if IS_PDF else "png"), bbox_inches="tight")
-plt.show()
 
+if not NOSHOW:
+    plt.show()

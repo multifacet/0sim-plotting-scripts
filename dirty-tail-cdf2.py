@@ -32,9 +32,12 @@ def style(label):
             "CBMM": "#3977a3",
             "HawkEye": "#d13838",
             "CBMM-perapp": "#d13838",
+            "CBMM-only-huge": "#d13838",
             "Linux4.3": "black",
             "CBMM-tuned": "green",
-            "CBMM-shared": "black"
+            "CBMM-shared": "black",
+            "CBMM-huge": "black",
+            "CBMM-async" : "red",
             }
 
     linesty = "--" if "frag" in label else "solid"
@@ -113,6 +116,9 @@ ys = [y * NINES / 100. for y in ys] # 0 ..= nines
 ys = [100. - 10. ** (2 - y) for y in ys] # log space
 ys = [1 / (100 - y) for y in ys]
 
+# {label:(xs, ys)}
+data_tmp = {}
+
 s = ""
 
 for (i, factor) in zip(range(NPLOTS), SCALE):
@@ -129,17 +135,20 @@ for (i, factor) in zip(range(NPLOTS), SCALE):
     else:
         plt.plot(xs, scaledys, label=label, color=c, linestyle=ls, linewidth=2)
 
+    data_tmp[label] = (xs, scaledys)
+
     s+=label
 
 print(s)
 
-plt.xscale("symlog")
-plt.xticks(rotation=90)
-plt.xlabel("Latency (%s)" % ("cycles" if FREQ is None else "usec"))
-plt.xlim((1,1e7))
+if "SHADED" in environ:
+    plt.fill(data_tmp["CBMM"][0] + data_tmp["Linux"][0][::-1],
+            data_tmp["CBMM"][1] + data_tmp["Linux"][1][::-1], color=(1, 0, 0, 0.2))
+    plt.fill(data_tmp["CBMM,fragmented"][0] + data_tmp["Linux,fragmented"][0][::-1],
+            data_tmp["CBMM,fragmented"][1] + data_tmp["Linux,fragmented"][1][::-1], color=(1, 0, 0, 0.2))
 
 # convert milliseconds to a human-readable label
-def ms_to_label(ms):
+def ms_to_label(ms, fp=1):
     text = None
 
     if ms < 1:
@@ -157,19 +166,35 @@ def ms_to_label(ms):
         ms /= 60. * 60. * 1000.
         text = "h"
 
-    return "%.1f %s" % (ms, text)
+    return ("%." + str(fp) + "f %s") % (ms, text)
 
 plt.ylabel("Avg time between events")
 #plt.yscale("close_to_one")
 plt.yscale("log")
-plt.ylim((10**-1, 10**(NINES-5)))
+plt.ylim((10**-1, 10**(NINES-4)))
 yt, oldlab = plt.yticks()
-plt.yticks(yt, map(ms_to_label, yt))
+yl = list(map(ms_to_label, yt))
+print(yt)
+print(yl)
+plt.yticks(yt, yl)
+
+plt.xscale("log")
+#plt.xticks(rotation=90)
+plt.xticks(rotation=45)
+#plt.xlabel("Latency (%s)" % ("cycles" if FREQ is None else "usec"))
+plt.xlabel("Latency")
+plt.xlim((10,1e6))
+
+xt, oldlab = plt.xticks()
+xl = list(map(lambda x: ms_to_label(x/1000., 0), xt))
+print(xt)
+print(xl)
+plt.xticks(xt, xl)
 
 plt.grid(True)
 
 if environ.get("NOLEGEND") is None:
-    plt.legend(bbox_to_anchor=(0, 1.05), loc='lower left', ncol=3)
+    plt.legend(bbox_to_anchor=(0, 1.05), loc='lower left', ncol=2)
 #plt.legend(bbox_to_anchor=(1.05, 1.0), loc='upper left')
 #plt.legend(loc='lower right')
 

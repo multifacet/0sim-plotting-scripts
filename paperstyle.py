@@ -58,7 +58,7 @@ def _figsize():
     elif os.environ.get("SLIDE_PLOT") is not None:
         # Side-effect: increase font size, set title
         matplotlib.rcParams.update({'font.size': SLIDES_FONT_SIZE})
-        plt.title(os.environ.get("SLIDE_PLOT"))
+        #plt.title(os.environ.get("SLIDE_PLOT"))
 
         return (8, 5)
     elif os.environ.get("SHORT_PLOT") is not None:
